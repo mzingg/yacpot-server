@@ -6,6 +6,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({OrganisationUnitModelTest.class, GenericModelTest.class, RoomModelTest.class, EventModelTest.class, SecurityRoleTest.class})
+@SuiteClasses({com.yacpot.server.tests.model.AllTests.class, com.yacpot.server.tests.rest.AllTests.class})
 public class AllTests {
 }
