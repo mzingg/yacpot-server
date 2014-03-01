@@ -3,78 +3,26 @@ package com.yacpot.server.model;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
-import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class GenericModel<T extends GenericModel> implements Serializable {
-
-  private UUID id;
-
-  private LocalDateTime timestamp;
-
-  private transient String label;
-
-  private transient int orderWeight;
-
-  public GenericModel() {
-    this.id = UUID.randomUUID();
-    this.orderWeight = 0;
-    this.label = id.toString();
-    timestamp = LocalDateTime.now();
-  }
-
-  public UUID id() {
-    return id;
-  }
+public interface GenericModel<T extends GenericModel> {
+  UUID id();
 
   @SuppressWarnings("unchecked")
-  public T id(@NotNull UUID newId) {
-    this.id = newId;
-    return (T) this;
-  }
+  T id(@NotNull UUID newId);
 
-  public String label() {
-    return label;
-  }
+  String label();
 
   @SuppressWarnings("unchecked")
-  public T label(@NotNull String label) {
-    this.label = label;
-    return (T) this;
-  }
+  T label(@NotNull String label);
 
-  public int orderWeight() {
-    return orderWeight;
-  }
+  int orderWeight();
 
   @SuppressWarnings("unchecked")
-  public T orderWeight(int orderWeight) {
-    this.orderWeight = orderWeight;
-    return (T) this;
-  }
+  T orderWeight(int orderWeight);
 
-  public LocalDateTime timestamp() {
-    return this.timestamp;
-  }
+  LocalDateTime timestamp();
 
   @SuppressWarnings("unchecked")
-  public T timestamp(@NotNull LocalDateTime timestamp) {
-    this.timestamp = timestamp;
-    return (T) this;
-  }
-
-  @Override
-  public boolean equals(@NotNull Object o) {
-    if (this == o) return true;
-    if (!(o instanceof GenericModel)) return false;
-
-    GenericModel that = (GenericModel) o;
-
-    return id().equals(that.id());
-  }
-
-  @Override
-  public int hashCode() {
-    return id.hashCode();
-  }
+  T timestamp(@NotNull LocalDateTime timestamp);
 }

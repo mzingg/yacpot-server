@@ -4,7 +4,7 @@ import com.yacpot.server.model.sort.GenericModelComparator;
 
 import java.util.*;
 
-public class OrganisationUnit extends GenericModel<OrganisationUnit> {
+public class OrganisationUnit extends AbstractGenericModel<OrganisationUnit> {
 
   private final Set<Room> roomList;
   private final List<SecurityRole> roleList;

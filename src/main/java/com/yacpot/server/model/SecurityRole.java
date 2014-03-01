@@ -1,6 +1,6 @@
 package com.yacpot.server.model;
 
-public class SecurityRole extends GenericModel<SecurityRole> {
+public class SecurityRole extends AbstractGenericModel<SecurityRole> {
   private String description;
 
   public String description() {

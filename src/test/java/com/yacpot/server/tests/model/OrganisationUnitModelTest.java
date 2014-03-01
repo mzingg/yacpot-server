@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import static com.yacpot.server.tests.ModelTestUtil.toJoinedString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class OrganisationUnitModelTest {
 
@@ -24,4 +26,17 @@ public class OrganisationUnitModelTest {
     assertEquals("role1,role2", toJoinedString(ou.roles()));
   }
 
+  @Test
+  public void testEmptyReturnsEmptyRoomlist() {
+    OrganisationUnit ou = new OrganisationUnit();
+    assertNotNull(ou.rooms());
+    assertTrue(ou.rooms().size() == 0);
+  }
+
+  @Test
+  public void testEmptyReturnsEmptyRolelist() {
+    OrganisationUnit ou = new OrganisationUnit();
+    assertNotNull(ou.roles());
+    assertTrue(ou.roles().size() == 0);
+  }
 }
