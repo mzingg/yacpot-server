@@ -1,8 +1,5 @@
-package com.yacpot.server.tests.model;
+package com.yacpot.server.model;
 
-import com.yacpot.server.model.OrganisationUnit;
-import com.yacpot.server.model.Room;
-import com.yacpot.server.model.SecurityRole;
 import org.junit.Test;
 
 import static com.yacpot.server.tests.ModelTestUtil.toJoinedString;
@@ -10,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class OrganisationUnitModelTest {
+public class OrganisationUnitTest {
 
   @Test
   public void testAddRooms() {

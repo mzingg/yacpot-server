@@ -33,8 +33,17 @@ public class ApplicationMapping {
   }
 
   public ProcessingResult resolve(String path) throws MappingException {
-    List<MappingSolution> solutions = findSolutionsFor(path);
+    String pathToMatch = path;
+    if (StringUtils.isNotBlank(contextPath) && !path.startsWith(contextPath)) {
+      throw new MappingException("When contextPath is set all paths must start with theis contextpath (" + contextPath + ") for resolving.");
+    }
+    if (StringUtils.isNotBlank(contextPath) && path.startsWith(contextPath)) {
+      pathToMatch = StringUtils.substringAfter(path, contextPath);
+    }
 
+    List<MappingSolution> solutions = findSolutionsFor(pathToMatch);
+
+    // TODO: How to handle multiple solutions?
     if (solutions.size() > 0) {
       return solutions.get(0).execute();
     }
@@ -43,17 +52,12 @@ public class ApplicationMapping {
   }
 
   private List<MappingSolution> findSolutionsFor(String path) {
-    String pathToMatch = path;
-    if (path.startsWith(contextPath)) {
-      pathToMatch = StringUtils.substringAfter(path, contextPath);
-    }
-
     List<MappingSolution> result = new ArrayList<>();
     for (MappingEntry mapping : resourceMappings) {
-      Matcher matcher = mapping.getPattern().matcher(pathToMatch);
+      Matcher matcher = mapping.pattern().matcher(path);
       if (!matcher.matches()) continue;
 
-      result.add(new MappingSolution(mapping, pathToMatch, matcher.toMatchResult()));
+      result.add(new MappingSolution(mapping, path, matcher.toMatchResult()));
     }
     return result;
   }
@@ -64,25 +68,31 @@ public class ApplicationMapping {
   }
 
   private final class MappingEntry {
+    private final ResourceMapping resourceMapping;
     private final Object resourceInstance;
     private final Method method;
     private final Pattern pattern;
 
     private MappingEntry(@NotNull ResourceMapping resourceMapping, @NotNull Object resourceInstance, @NotNull Method method) {
+      this.resourceMapping = resourceMapping;
       this.resourceInstance = resourceInstance;
       this.method = method;
       this.pattern = Pattern.compile(resourceMapping.pattern());
     }
 
-    public Object getResourceInstance() {
+    public ResourceMapping resourceMapping() {
+      return resourceMapping;
+    }
+
+    public Object resourceInstance() {
       return resourceInstance;
     }
 
-    public Method getMethod() {
+    public Method method() {
       return method;
     }
 
-    public Pattern getPattern() {
+    public Pattern pattern() {
       return pattern;
     }
   }
@@ -99,7 +109,7 @@ public class ApplicationMapping {
     }
 
     public ProcessingResult execute() throws MappingException {
-      Method method = mappingEntry.getMethod();
+      Method method = mappingEntry.method();
       // Check return type is ProcessingResult
       if (!method.getReturnType().isAssignableFrom(ProcessingResult.class)) {
         throw new MappingException("Return type of method must be ProcessingResult.");
@@ -130,7 +140,7 @@ public class ApplicationMapping {
 
       // Instantiate the class and call the method
       try {
-        return (ProcessingResult) method.invoke(mappingEntry.getResourceInstance(), parameters);
+        return (ProcessingResult) method.invoke(mappingEntry.resourceInstance(), parameters);
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new MappingException("Problem instantiating Resource object: " + e.getLocalizedMessage(), e);
       }

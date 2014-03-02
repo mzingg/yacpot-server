@@ -1,6 +1,5 @@
-package com.yacpot.server.tests.model;
+package com.yacpot.server.model;
 
-import com.yacpot.server.model.SecurityRole;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

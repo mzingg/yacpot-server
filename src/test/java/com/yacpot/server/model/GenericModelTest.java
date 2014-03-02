@@ -1,7 +1,5 @@
-package com.yacpot.server.tests.model;
+package com.yacpot.server.model;
 
-import com.yacpot.server.model.AbstractGenericModel;
-import com.yacpot.server.model.GenericModel;
 import com.yacpot.server.model.sort.GenericModelComparator;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;

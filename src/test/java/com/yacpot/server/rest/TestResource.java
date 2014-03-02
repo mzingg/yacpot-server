@@ -1,18 +1,14 @@
-package com.yacpot.server.tests.rest;
+package com.yacpot.server.rest;
 
-import com.yacpot.server.rest.ProcessingResult;
-import com.yacpot.server.rest.Resource;
-import com.yacpot.server.rest.ResourceMapping;
 import org.apache.commons.lang3.StringUtils;
 
 @Resource
 public class TestResource {
-  public final static ProcessingResult testProcessingResult = new ProcessingResult() {
-  };
 
   @ResourceMapping(pattern = "^/a/path$")
   public ProcessingResult test() {
-    return testProcessingResult;
+    return new ProcessingResult() {
+    }.json("aTestResult");
   }
 
   @ResourceMapping(pattern = "^/a/path/invalid$")

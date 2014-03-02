@@ -1,8 +1,5 @@
-package com.yacpot.server.tests.rest;
+package com.yacpot.server.rest;
 
-import com.yacpot.server.rest.ApplicationMapping;
-import com.yacpot.server.rest.MappingException;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +19,7 @@ public class ApplicationMappingTest {
     ApplicationMapping mapping = new ApplicationMapping();
     mapping.registerResource(new TestResource());
 
-    assertEquals(TestResource.testProcessingResult, mapping.resolve("/a/path"));
+    assertEquals("aTestResult", mapping.resolve("/a/path").json());
   }
 
   @Test
@@ -31,7 +28,15 @@ public class ApplicationMappingTest {
     ApplicationMapping mapping = new ApplicationMapping().contextPath("/contextPath");
     mapping.registerResource(new TestResource());
 
-    assertEquals(TestResource.testProcessingResult, mapping.resolve("/contextPath/a/path"));
+    assertEquals("aTestResult", mapping.resolve("/contextPath/a/path").json());
+  }
+
+  @Test(expected = MappingException.class)
+  public void testResolveDoesNotStartWithContaxtPathThrowsException() throws Exception {
+    ApplicationMapping mapping = new ApplicationMapping().contextPath("/contextPath");
+    mapping.registerResource(new TestResource());
+
+    mapping.resolve("/a/path").json();
   }
 
   @Test

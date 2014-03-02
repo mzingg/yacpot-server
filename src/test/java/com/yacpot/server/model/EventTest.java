@@ -1,9 +1,5 @@
-package com.yacpot.server.tests.model;
+package com.yacpot.server.model;
 
-import com.yacpot.server.model.DateIntervalIncarnation;
-import com.yacpot.server.model.Event;
-import com.yacpot.server.model.EventTimeline;
-import com.yacpot.server.model.SingleDateIncarnation;
 import com.yacpot.server.model.sort.EventModelComparator;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -16,7 +12,7 @@ import java.util.TreeSet;
 import static com.yacpot.server.tests.ModelTestUtil.toJoinedString;
 import static org.junit.Assert.*;
 
-public class EventModelTest {
+public class EventTest {
 
   @Test
   public void testEmptyEventReturnsNonNullTimeline() {

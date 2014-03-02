@@ -1,8 +1,5 @@
-package com.yacpot.server.tests.model;
+package com.yacpot.server.model;
 
-import com.yacpot.server.model.Event;
-import com.yacpot.server.model.Room;
-import com.yacpot.server.model.SingleDateIncarnation;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
@@ -12,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class RoomModelTest {
+public class RoomTest {
 
   @Test
   public void testChannelNotNull() {
