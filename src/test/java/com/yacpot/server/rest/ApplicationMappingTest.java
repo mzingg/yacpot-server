@@ -24,7 +24,6 @@ public class ApplicationMappingTest {
 
   @Test
   public void testMappingResolvesWithApplicationContext() throws Exception {
-
     ApplicationMapping mapping = new ApplicationMapping().contextPath("/contextPath");
     mapping.registerResource(new TestResource());
 
@@ -41,10 +40,9 @@ public class ApplicationMappingTest {
 
   @Test
   public void testParameterPassing() throws Exception {
-    ApplicationMapping mapping = new ApplicationMapping().contextPath("/contextPath");
+    ApplicationMapping mapping = new ApplicationMapping();
     mapping.registerResource(new TestResource());
 
-    assertEquals("23", mapping.resolve("/a/path/p1/23").json());
-
+    assertEquals("23", mapping.resolve("/a/path/p2/23").json());
   }
 }

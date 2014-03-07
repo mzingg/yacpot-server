@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 public class TestResource {
 
   @ResourceMapping(pattern = "^/a/path$")
-  public ProcessingResult test() {
-    return new ProcessingResult() {
+  public TaskResult test() {
+    return new TaskResult() {
     }.json("aTestResult");
   }
 
@@ -17,8 +17,14 @@ public class TestResource {
   }
 
   @ResourceMapping(pattern = "^/a/path/p1/(\\d+)$")
-  public ProcessingResult testParameter(String id) {
-    return new ProcessingResult() {
+  public TaskResult testParameter(String id) {
+    return new TaskResult() {
+    }.json(id);
+  }
+
+  @ResourceMapping(pattern = "^/a/path/p2/(\\d+)$")
+  public TaskResult testParameterWithTask(Task task, String id) {
+    return new TaskResult() {
     }.json(id);
   }
 }

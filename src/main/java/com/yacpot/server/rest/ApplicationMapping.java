@@ -32,10 +32,10 @@ public class ApplicationMapping {
     }
   }
 
-  public ProcessingResult resolve(String path) throws MappingException {
+  public TaskResult resolve(String path) throws MappingException {
     String pathToMatch = path;
     if (StringUtils.isNotBlank(contextPath) && !path.startsWith(contextPath)) {
-      throw new MappingException("When contextPath is set all paths must start with theis contextpath (" + contextPath + ") for resolving.");
+      throw new MappingException("When contextPath is set all paths must start with this contextpath (" + contextPath + ") for resolving.");
     }
     if (StringUtils.isNotBlank(contextPath) && path.startsWith(contextPath)) {
       pathToMatch = StringUtils.substringAfter(path, contextPath);
@@ -48,7 +48,7 @@ public class ApplicationMapping {
       return solutions.get(0).execute();
     }
 
-    return ProcessingResult.OkResult;
+    return TaskResult.OkResult;
   }
 
   private List<MappingSolution> findSolutionsFor(String path) {
@@ -108,21 +108,30 @@ public class ApplicationMapping {
       this.mappingEntry = mappingEntry;
     }
 
-    public ProcessingResult execute() throws MappingException {
+    public TaskResult execute() throws MappingException {
       Method method = mappingEntry.method();
-      // Check return type is ProcessingResult
-      if (!method.getReturnType().isAssignableFrom(ProcessingResult.class)) {
-        throw new MappingException("Return type of method must be ProcessingResult.");
+      // Check return type is TaskResult
+      if (!method.getReturnType().isAssignableFrom(TaskResult.class)) {
+        throw new MappingException("Return type of method must be TaskResult.");
       }
 
       // Check method signature
       Class<?>[] signature = method.getParameterTypes();
-      int numberOfParamGroups = matchResult.groupCount();
-      if (signature.length != numberOfParamGroups) {
-        throw new MappingException(MessageFormat.format("Number of method parameters ({0}) is not equals the matched groups in the pattern ({1}).", signature.length, numberOfParamGroups));
+      // Check if the first argument is of type Task and adjust flags accordingly
+      int startIndex = 0;
+      boolean requestsTaskParameter = false;
+      if (signature.length > 0 && Task.class.isAssignableFrom(signature[0])) {
+        requestsTaskParameter = true;
+        startIndex = 1;
       }
+
+      if (signature.length != matchResult.groupCount() + startIndex) {
+        throw new MappingException(MessageFormat.format("Number of method parameters ({0}) is not equals the matched groups in the pattern ({1}).", signature.length,  matchResult.groupCount() + startIndex));
+      }
+
       boolean allStringParameters = true;
-      for (Class<?> clazz : signature) {
+      for (int idx = startIndex; idx < signature.length; idx++) {
+        Class<?> clazz = signature[idx];
         if (!clazz.equals(String.class)) {
           allStringParameters = false;
         }
@@ -131,16 +140,19 @@ public class ApplicationMapping {
         throw new MappingException("The type of all parameters must be String.");
       }
 
+      Object[] parameters = new Object[signature.length];
+      if (requestsTaskParameter) {
+        parameters[0] = new Task() {};
+      }
       // fill parameter array with matched groups
       // first match is group(1)
-      Object[] parameters = new String[numberOfParamGroups];
-      for (int i = 0; i < numberOfParamGroups; i++) {
-        parameters[i] = matchResult.group(i + 1);
+      for (int i = startIndex; i < signature.length; i++) {
+        parameters[i] = matchResult.group(i - startIndex + 1);
       }
 
       // Instantiate the class and call the method
       try {
-        return (ProcessingResult) method.invoke(mappingEntry.resourceInstance(), parameters);
+        return (TaskResult) method.invoke(mappingEntry.resourceInstance(), parameters);
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new MappingException("Problem instantiating Resource object: " + e.getLocalizedMessage(), e);
       }

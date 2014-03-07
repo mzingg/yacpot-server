@@ -2,17 +2,17 @@ package com.yacpot.server.rest;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class ProcessingResult {
+public class TaskResult {
 
-  public static ProcessingResult OkResult = new ProcessingResult(){};
+  public static TaskResult OkResult = new TaskResult(){};
 
   private String json;
 
-  public ProcessingResult() {
+  public TaskResult() {
     this.json = StringUtils.EMPTY;
   }
 
-  public ProcessingResult json(String json) {
+  public TaskResult json(String json) {
     this.json = json;
     return this;
   }
