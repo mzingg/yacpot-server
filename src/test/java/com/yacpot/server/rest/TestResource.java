@@ -11,9 +11,27 @@ public class TestResource {
     }.json("aTestResult");
   }
 
-  @ResourceMapping(pattern = "^/a/path/invalid$")
+  @ResourceMapping(pattern = "^/a/path/invalid1$")
   public String testInvalidReturnType() {
     return StringUtils.EMPTY;
+  }
+
+  @ResourceMapping(pattern = "^/a/path/invalid2/(\\d+)$")
+  public TaskResult testInvalidParameterType(int intParam) {
+    return new TaskResult() {
+    }.json(StringUtils.EMPTY);
+  }
+
+  @ResourceMapping(pattern = "^/a/path/invalid3/(.+)$")
+  public TaskResult testInvalidTooManyParameters(String p1, String p2) {
+    return new TaskResult() {
+    }.json(StringUtils.EMPTY);
+  }
+
+  @ResourceMapping(pattern = "^/a/path/invalid4/(.+)/(.+)$")
+  public TaskResult testInvalidNotEnoughParameters(String p1) {
+    return new TaskResult() {
+    }.json(StringUtils.EMPTY);
   }
 
   @ResourceMapping(pattern = "^/a/path/p1/(\\d+)$")
