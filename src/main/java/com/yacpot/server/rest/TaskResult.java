@@ -4,7 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TaskResult {
 
-  public static TaskResult OkResult = new TaskResult(){};
+  public static TaskResult OkResult = new TaskResult() {
+  };
+  public static TaskResult NotFoundResult = new TaskResult() {
+  };
 
   private String json;
 

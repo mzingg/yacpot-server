@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 @Resource
 public class TestResource {
 
-  @ResourceMapping(pattern = "^/a/path$")
+  @ResourceMapping(pattern = "^/a/path$", supportsOperations = Operation.READ)
   public TaskResult test() {
     return new TaskResult() {
     }.json("aTestResult");
@@ -32,6 +32,11 @@ public class TestResource {
   public TaskResult testInvalidNotEnoughParameters(String p1) {
     return new TaskResult() {
     }.json(StringUtils.EMPTY);
+  }
+
+  @ResourceMapping(pattern = "^/a/path/invalid5$")
+  public TaskResult testInvalidWithException() throws Exception {
+    throw new Exception("Testexception");
   }
 
   @ResourceMapping(pattern = "^/a/path/p1/(\\d+)$")

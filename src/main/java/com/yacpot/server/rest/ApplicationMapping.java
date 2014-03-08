@@ -1,9 +1,8 @@
 package com.yacpot.server.rest;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -12,14 +11,11 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ApplicationMapping {
-
-  private String contextPath;
+public class ApplicationMapping<T extends Task> {
 
   private final List<MappingEntry> resourceMappings;
 
   public ApplicationMapping() {
-    this.contextPath = StringUtils.EMPTY;
     this.resourceMappings = new ArrayList<>();
   }
 
@@ -32,42 +28,27 @@ public class ApplicationMapping {
     }
   }
 
-  public TaskResult resolve(String path) throws MappingException {
-    String pathToMatch = path;
-    if (StringUtils.isNotBlank(contextPath) && !path.startsWith(contextPath)) {
-      throw new MappingException("When contextPath is set all paths must start with this contextpath (" + contextPath + ") for resolving.");
-    }
-    if (StringUtils.isNotBlank(contextPath) && path.startsWith(contextPath)) {
-      pathToMatch = StringUtils.substringAfter(path, contextPath);
-    }
-
-    List<MappingSolution> solutions = findSolutionsFor(pathToMatch);
+  public TaskResult resolve(@NotNull T task) throws MappingException {
+    List<MappingSolution> solutions = findSolutionsFor(task);
 
     // TODO: How to handle multiple solutions?
     if (solutions.size() > 0) {
       return solutions.get(0).execute();
     }
 
-    return TaskResult.OkResult;
+    return TaskResult.NotFoundResult;
   }
 
-  private List<MappingSolution> findSolutionsFor(String path) {
+  protected List<MappingSolution> findSolutionsFor(T task) {
     List<MappingSolution> result = new ArrayList<>();
     for (MappingEntry mapping : resourceMappings) {
-      Matcher matcher = mapping.pattern().matcher(path);
-      if (!matcher.matches()) continue;
-
-      result.add(new MappingSolution(mapping, path, matcher.toMatchResult()));
+      if (!mapping.appliesTo(task)) continue;
+      result.add(new MappingSolution(task, mapping));
     }
     return result;
   }
 
-  public ApplicationMapping contextPath(String contextPath) {
-    this.contextPath = contextPath;
-    return this;
-  }
-
-  private final class MappingEntry {
+  protected final class MappingEntry {
     private final ResourceMapping resourceMapping;
     private final Object resourceInstance;
     private final Method method;
@@ -95,16 +76,33 @@ public class ApplicationMapping {
     public Pattern pattern() {
       return pattern;
     }
+
+    public boolean appliesTo(T task) {
+      Operation[] operations = resourceMapping().supportsOperations();
+      if (operations.length > 0 && !ArrayUtils.contains(operations, task.operation()))
+        return false;
+
+      Matcher matcher = pattern().matcher(task.path());
+      if (!matcher.matches()) {
+        return false;
+      }
+
+      // first match is group(1)
+      MatchResult result = matcher.toMatchResult();
+      for (int idx = 1; idx <= result.groupCount(); idx++) {
+        task.parameter(matcher.group(idx));
+      }
+
+      return true;
+    }
   }
 
-  private final class MappingSolution {
+  protected final class MappingSolution {
+    private T task;
     private MappingEntry mappingEntry;
-    private String path;
-    private MatchResult matchResult;
 
-    private MappingSolution(MappingEntry mappingEntry, String path, MatchResult matchResult) {
-      this.path = path;
-      this.matchResult = matchResult;
+    private MappingSolution(T task, MappingEntry mappingEntry) {
+      this.task = task;
       this.mappingEntry = mappingEntry;
     }
 
@@ -125,8 +123,8 @@ public class ApplicationMapping {
         startIndex = 1;
       }
 
-      if (signature.length != matchResult.groupCount() + startIndex) {
-        throw new MappingException(MessageFormat.format("Number of method parameters ({0}) is not equals the matched groups in the pattern ({1}).", signature.length,  matchResult.groupCount() + startIndex));
+      if (signature.length != task.pathParameterCount() + startIndex) {
+        throw new MappingException(MessageFormat.format("Number of method parameters ({0}) is not equals the matched groups in the pattern ({1}).", signature.length, task.pathParameterCount() + startIndex));
       }
 
       boolean allStringParameters = true;
@@ -142,19 +140,18 @@ public class ApplicationMapping {
 
       Object[] parameters = new Object[signature.length];
       if (requestsTaskParameter) {
-        parameters[0] = new Task() {};
+        parameters[0] = task;
       }
       // fill parameter array with matched groups
-      // first match is group(1)
       for (int i = startIndex; i < signature.length; i++) {
-        parameters[i] = matchResult.group(i - startIndex + 1);
+        parameters[i] = task.pathParameter(i - startIndex);
       }
 
       // Instantiate the class and call the method
       try {
         return (TaskResult) method.invoke(mappingEntry.resourceInstance(), parameters);
-      } catch (IllegalAccessException | InvocationTargetException e) {
-        throw new MappingException("Problem instantiating Resource object: " + e.getLocalizedMessage(), e);
+      } catch (Exception e) {
+        throw new MappingException("Error calling resource method: " + e.getLocalizedMessage(), e);
       }
     }
 

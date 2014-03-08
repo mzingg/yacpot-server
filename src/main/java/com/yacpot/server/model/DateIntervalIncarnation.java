@@ -1,7 +1,9 @@
 package com.yacpot.server.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.*;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 public class DateIntervalIncarnation extends AbstractGenericModel<DateIntervalIncarnation> implements EventIncarnation {
 

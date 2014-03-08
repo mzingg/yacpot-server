@@ -1,6 +1,5 @@
 package com.yacpot.server.model.sort;
 
-import com.yacpot.server.model.AbstractGenericModel;
 import com.yacpot.server.model.GenericModel;
 
 import java.util.Comparator;
@@ -18,37 +17,37 @@ public abstract class AbstractModelComparator<T extends GenericModel, U extends 
   @SuppressWarnings("unchecked")
   public U ascending() {
     this.sortDirectionMultiplier = 1;
-    return (U)this;
+    return (U) this;
   }
 
   @SuppressWarnings("unchecked")
   public U descending() {
     this.sortDirectionMultiplier = -1;
-    return (U)this;
+    return (U) this;
   }
 
   @SuppressWarnings("unchecked")
   public U withoutOrder() {
     this.orderStrategy = OrderStrategy.NO_ORDER;
-    return (U)this;
+    return (U) this;
   }
 
   @SuppressWarnings("unchecked")
   public U byWeight() {
     this.orderStrategy = OrderStrategy.WEIGHT;
-    return (U)this;
+    return (U) this;
   }
 
   @SuppressWarnings("unchecked")
   public U byLabel() {
     this.orderStrategy = OrderStrategy.LABEL;
-    return (U)this;
+    return (U) this;
   }
 
   @SuppressWarnings("unchecked")
   public U byTimestamp() {
     this.orderStrategy = OrderStrategy.TIMESTAMP;
-    return (U)this;
+    return (U) this;
   }
 
   @Override

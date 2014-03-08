@@ -1,7 +1,6 @@
 package com.yacpot.server.model.sort;
 
 import com.yacpot.server.model.Event;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 public class EventModelComparator extends AbstractModelComparator<Event, EventModelComparator> {
