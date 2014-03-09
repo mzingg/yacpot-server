@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ApplicationMappingTest {
 
+  @SuppressWarnings("ConstantConditions")
   @Test(expected = IllegalArgumentException.class)
   public void testNullResourceregisteringNotAllowed() throws Exception {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();

@@ -1,5 +1,6 @@
-package com.yacpot.server.rest;
+package com.yacpot.server.jetty;
 
+import com.yacpot.server.rest.*;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class JettyRequestResolvingTest {
 
     Map<String, String[]> theMap = new HashMap<>();
     for (int idx = 0; idx < parameters.length - 1; idx += 2) {
-      String key = (String) parameters[idx];
+      String key = parameters[idx];
       String[] value = new String[]{parameters[idx + 1]};
       theMap.put(key, value);
     }

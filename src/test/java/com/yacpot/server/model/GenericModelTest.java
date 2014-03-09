@@ -104,7 +104,7 @@ public class GenericModelTest {
     assertEquals("A,Z,E,Y", toJoinedString(orderedList4));
   }
 
-  private Collection<GenericModel> getIdentityModels(Comparator<GenericModel> comparator) throws InterruptedException {
+  private Collection<GenericModel> getIdentityModels(Comparator<GenericModel> comparator) {
     List<GenericModel> orderedList = new ArrayList<>();
     orderedList.add(new AbstractGenericModel() {
     }.label("A").orderWeight(10).timestamp(new LocalDateTime(2014, 2, 22, 14, 0, 0)));

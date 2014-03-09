@@ -1,7 +1,7 @@
 package com.yacpot.server.tests;
 
+import com.yacpot.server.jetty.JettyRequestResolvingTest;
 import com.yacpot.server.rest.ApplicationMappingTest;
-import com.yacpot.server.rest.JettyRequestResolvingTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

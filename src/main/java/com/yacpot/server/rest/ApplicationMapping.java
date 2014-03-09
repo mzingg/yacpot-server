@@ -42,7 +42,7 @@ public class ApplicationMapping<T extends Task> {
   protected List<MappingSolution> findSolutionsFor(T task) {
     List<MappingSolution> result = new ArrayList<>();
     for (MappingEntry mapping : resourceMappings) {
-      if (!mapping.appliesTo(task)) continue;
+      if (mapping.appliesTo(task)) continue;
       result.add(new MappingSolution(task, mapping));
     }
     return result;
@@ -80,11 +80,11 @@ public class ApplicationMapping<T extends Task> {
     public boolean appliesTo(T task) {
       Operation[] operations = resourceMapping().supportsOperations();
       if (operations.length > 0 && !ArrayUtils.contains(operations, task.operation()))
-        return false;
+        return true;
 
       Matcher matcher = pattern().matcher(task.path());
       if (!matcher.matches()) {
-        return false;
+        return true;
       }
 
       // first match is group(1)
@@ -93,7 +93,7 @@ public class ApplicationMapping<T extends Task> {
         task.parameter(matcher.group(idx));
       }
 
-      return true;
+      return false;
     }
   }
 

@@ -1,5 +1,8 @@
-package com.yacpot.server.rest;
+package com.yacpot.server.jetty;
 
+import com.yacpot.server.rest.Operation;
+import com.yacpot.server.rest.TaskException;
+import com.yacpot.server.rest.TaskFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Request;
 

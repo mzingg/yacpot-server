@@ -1,5 +1,6 @@
-package com.yacpot.server.rest;
+package com.yacpot.server.jetty;
 
+import com.yacpot.server.rest.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -8,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class JettyRequestTask extends Task<JettyRequestTask> {
-
-  private Map<String, String[]> parameterMap;
 
   public JettyRequestTask(String path, Map<String, String[]> parameterMap) {
     super(path, mapJettyParameterToAttributes(parameterMap));
