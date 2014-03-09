@@ -21,28 +21,28 @@ public class Room extends AbstractGenericModel<Room> {
     this.eventSet = new TreeSet<>(comparator);
   }
 
-  public Room eventSortAnchorDate(LocalDateTime anchorDate) {
+  public Room setEventSortAnchorDate(LocalDateTime anchorDate) {
     comparator.anchorDate(anchorDate);
     return this;
   }
 
-  public Channel channel() {
+  public Channel getChannel() {
     return channel;
   }
 
-  public Room event(Event event) {
+  public Room addEvent(Event event) {
     this.eventSet.add(event);
     return this;
   }
 
-  public Collection<Event> events() {
+  public Collection<Event> getEvents() {
     return Collections.unmodifiableSet(eventSet);
   }
 
-  public Collection<Event> calendar(LocalDate fromDate, LocalDate toDate) {
+  public Collection<Event> getCalendar(LocalDate fromDate, LocalDate toDate) {
     Collection<Event> result = new ArrayList<>();
-    for (Event e : events()) {
-      if (e.timeline().hasIncarnationsDuring(fromDate, toDate)) {
+    for (Event e : getEvents()) {
+      if (e.getTimeline().hasIncarnationsDuring(fromDate, toDate)) {
         result.add(e);
       }
     }

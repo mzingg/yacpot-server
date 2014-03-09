@@ -24,49 +24,49 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
   }
 
   @Override
-  public UUID id() {
+  public UUID getId() {
     return id;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T id(@NotNull UUID newId) {
+  public T setId(@NotNull UUID newId) {
     this.id = newId;
     return (T) this;
   }
 
   @Override
-  public String label() {
+  public String getLabel() {
     return label;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T label(@NotNull String label) {
+  public T setLabel(@NotNull String label) {
     this.label = label;
     return (T) this;
   }
 
   @Override
-  public int orderWeight() {
+  public int getOrderWeight() {
     return orderWeight;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T orderWeight(int orderWeight) {
+  public T setOrderWeight(int orderWeight) {
     this.orderWeight = orderWeight;
     return (T) this;
   }
 
   @Override
-  public LocalDateTime timestamp() {
+  public LocalDateTime setTimestamp() {
     return this.timestamp;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T timestamp(@NotNull LocalDateTime timestamp) {
+  public T getTimestamp(@NotNull LocalDateTime timestamp) {
     this.timestamp = timestamp;
     return (T) this;
   }
@@ -78,7 +78,7 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
 
     GenericModel that = (GenericModel) o;
 
-    return id().equals(that.id());
+    return getId().equals(that.getId());
   }
 
   @Override

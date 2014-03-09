@@ -15,12 +15,12 @@ public class TaskResult {
     this.json = StringUtils.EMPTY;
   }
 
-  public TaskResult json(String json) {
+  public TaskResult setJson(String json) {
     this.json = json;
     return this;
   }
 
-  public String json() {
+  public String getJson() {
     return json;
   }
 }

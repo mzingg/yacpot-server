@@ -17,22 +17,22 @@ public class EventTest {
   @Test
   public void testEmptyEventReturnsNonNullTimeline() {
     Event testObj = new Event();
-    assertNotNull(testObj.timeline());
+    assertNotNull(testObj.getTimeline());
   }
 
   @Test
   public void testTimelineInheritsTimestamp() {
     LocalDateTime timestamp = new LocalDateTime(2014, 1, 10, 10, 0);
-    Event testObj = new Event().timestamp(timestamp);
-    assertEquals(testObj.timestamp(), testObj.timeline().timestamp());
+    Event testObj = new Event().getTimestamp(timestamp);
+    assertEquals(testObj.setTimestamp(), testObj.getTimeline().setTimestamp());
   }
 
   @Test
   public void testEventComparatorDisableEventsorting() {
     EventModelComparator testObj = new EventModelComparator().sortByEventDate(false).byLabel();
     Set<Event> testList = new TreeSet<>(testObj);
-    testList.add(new Event().label("Event Z"));
-    testList.add(new Event().label("Event A"));
+    testList.add(new Event().setLabel("Event Z"));
+    testList.add(new Event().setLabel("Event A"));
 
     assertEquals("Event A,Event Z", toJoinedString(testList));
   }
@@ -44,9 +44,9 @@ public class EventTest {
     LocalDateTime anchor = new LocalDateTime(2014, 4, 10, 10, 0);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new DateIntervalIncarnation(first, first.plusDays(1)));
+    testObj.addIncarnation(new DateIntervalIncarnation(first, first.plusDays(1)));
 
-    assertEquals(first, testObj.sortDate(anchor));
+    assertEquals(first, testObj.getSortDate(anchor));
   }
 
   @Test
@@ -58,9 +58,9 @@ public class EventTest {
     LocalDateTime anchor = new LocalDateTime(2014, 4, 10, 10, 0);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new SingleDateIncarnation(first)).incarnation(new SingleDateIncarnation(second)).incarnation(new SingleDateIncarnation(third));
+    testObj.addIncarnation(new SingleDateIncarnation(first)).addIncarnation(new SingleDateIncarnation(second)).addIncarnation(new SingleDateIncarnation(third));
 
-    assertEquals(third, testObj.sortDate(anchor));
+    assertEquals(third, testObj.getSortDate(anchor));
   }
 
   @Test
@@ -72,9 +72,9 @@ public class EventTest {
     LocalDateTime anchor = new LocalDateTime(2013, 12, 10, 10, 0);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new SingleDateIncarnation(first)).incarnation(new SingleDateIncarnation(second)).incarnation(new SingleDateIncarnation(third));
+    testObj.addIncarnation(new SingleDateIncarnation(first)).addIncarnation(new SingleDateIncarnation(second)).addIncarnation(new SingleDateIncarnation(third));
 
-    assertEquals(first, testObj.sortDate(anchor));
+    assertEquals(first, testObj.getSortDate(anchor));
   }
 
   @Test
@@ -86,9 +86,9 @@ public class EventTest {
     LocalDateTime anchor = new LocalDateTime(2014, 2, 9, 10, 0);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new SingleDateIncarnation(first)).incarnation(new SingleDateIncarnation(second)).incarnation(new SingleDateIncarnation(third));
+    testObj.addIncarnation(new SingleDateIncarnation(first)).addIncarnation(new SingleDateIncarnation(second)).addIncarnation(new SingleDateIncarnation(third));
 
-    assertEquals(second, testObj.sortDate(anchor));
+    assertEquals(second, testObj.getSortDate(anchor));
   }
 
   @Test
@@ -100,9 +100,9 @@ public class EventTest {
     LocalDateTime anchor = new LocalDateTime(2014, 2, 11, 10, 0);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new SingleDateIncarnation(first)).incarnation(new SingleDateIncarnation(second)).incarnation(new SingleDateIncarnation(third));
+    testObj.addIncarnation(new SingleDateIncarnation(first)).addIncarnation(new SingleDateIncarnation(second)).addIncarnation(new SingleDateIncarnation(third));
 
-    assertEquals(third, testObj.sortDate(anchor));
+    assertEquals(third, testObj.getSortDate(anchor));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -111,7 +111,7 @@ public class EventTest {
     LocalDate intervalEnd = intervalStart.plusDays(2);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new DateIntervalIncarnation(intervalStart.toLocalDateTime(new LocalTime(0, 0)), intervalEnd.toLocalDateTime(new LocalTime(0, 0))));
+    testObj.addIncarnation(new DateIntervalIncarnation(intervalStart.toLocalDateTime(new LocalTime(0, 0)), intervalEnd.toLocalDateTime(new LocalTime(0, 0))));
 
     testObj.hasIncarnationsDuring(intervalStart.plusDays(1), intervalStart);
   }
@@ -122,7 +122,7 @@ public class EventTest {
     LocalDate intervalEnd = intervalStart.plusDays(2);
 
     EventTimeline testObj = new EventTimeline();
-    testObj.incarnation(new DateIntervalIncarnation(intervalStart.toLocalDateTime(new LocalTime(0, 0)), intervalEnd.toLocalDateTime(new LocalTime(0, 0))));
+    testObj.addIncarnation(new DateIntervalIncarnation(intervalStart.toLocalDateTime(new LocalTime(0, 0)), intervalEnd.toLocalDateTime(new LocalTime(0, 0))));
 
     assertFalse(testObj.hasIncarnationsDuring(intervalStart.minusDays(1), intervalStart));
     assertTrue(testObj.hasIncarnationsDuring(intervalStart, intervalStart.plusDays(5)));

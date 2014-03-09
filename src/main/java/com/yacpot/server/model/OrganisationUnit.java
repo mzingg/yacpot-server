@@ -15,21 +15,21 @@ public class OrganisationUnit extends AbstractGenericModel<OrganisationUnit> {
     roleList = new ArrayList<>();
   }
 
-  public OrganisationUnit room(Room room) {
+  public OrganisationUnit setRoom(Room room) {
     roomList.add(room);
     return this;
   }
 
-  public Collection<Room> rooms() {
+  public Collection<Room> getRooms() {
     return Collections.unmodifiableCollection(roomList);
   }
 
-  public OrganisationUnit role(SecurityRole role) {
+  public OrganisationUnit addRole(SecurityRole role) {
     roleList.add(role);
     return this;
   }
 
-  public Collection<SecurityRole> roles() {
+  public Collection<SecurityRole> getRoles() {
     return Collections.unmodifiableCollection(roleList);
   }
 }

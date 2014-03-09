@@ -15,16 +15,16 @@ public class DateIntervalIncarnation extends AbstractGenericModel<DateIntervalIn
     this.endDate = endDate;
   }
 
-  public LocalDateTime startDate() {
+  public LocalDateTime getStartDate() {
     return startDate;
   }
 
-  public LocalDateTime endDate() {
+  public LocalDateTime getEndDate() {
     return endDate;
   }
 
   @Override
-  public LocalDateTime sortDate(LocalDateTime anchorDate) {
+  public LocalDateTime getSortDate(LocalDateTime anchorDate) {
     // LocalDateTime is immutable - so we can just return it here.
     return startDate;
   }

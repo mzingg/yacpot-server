@@ -79,10 +79,10 @@ public class ApplicationMapping<T extends Task> {
 
     public boolean appliesTo(T task) {
       Operation[] operations = resourceMapping().supportsOperations();
-      if (operations.length > 0 && !ArrayUtils.contains(operations, task.operation()))
+      if (operations.length > 0 && !ArrayUtils.contains(operations, task.getOperation()))
         return true;
 
-      Matcher matcher = pattern().matcher(task.path());
+      Matcher matcher = pattern().matcher(task.getPath());
       if (!matcher.matches()) {
         return true;
       }
@@ -90,7 +90,7 @@ public class ApplicationMapping<T extends Task> {
       // first match is group(1)
       MatchResult result = matcher.toMatchResult();
       for (int idx = 1; idx <= result.groupCount(); idx++) {
-        task.parameter(matcher.group(idx));
+        task.addParameter(matcher.group(idx));
       }
 
       return false;
@@ -123,8 +123,8 @@ public class ApplicationMapping<T extends Task> {
         startIndex = 1;
       }
 
-      if (signature.length != task.pathParameterCount() + startIndex) {
-        throw new MappingException(MessageFormat.format("Number of method parameters ({0}) is not equals the matched groups in the pattern ({1}).", signature.length, task.pathParameterCount() + startIndex));
+      if (signature.length != task.getPathParameterCount() + startIndex) {
+        throw new MappingException(MessageFormat.format("Number of method parameters ({0}) is not equals the matched groups in the pattern ({1}).", signature.length, task.getPathParameterCount() + startIndex));
       }
 
       boolean allStringParameters = true;
@@ -142,9 +142,9 @@ public class ApplicationMapping<T extends Task> {
       if (requestsTaskParameter) {
         parameters[0] = task;
       }
-      // fill parameter array with matched groups
+      // fill addParameter array with matched groups
       for (int i = startIndex; i < signature.length; i++) {
-        parameters[i] = task.pathParameter(i - startIndex);
+        parameters[i] = task.getPathParameter(i - startIndex);
       }
 
       // Instantiate the class and call the method

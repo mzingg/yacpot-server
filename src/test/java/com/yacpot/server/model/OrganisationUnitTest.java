@@ -9,29 +9,29 @@ public class OrganisationUnitTest {
 
   @Test
   public void testAddRooms() {
-    OrganisationUnit ou = new OrganisationUnit().room(new Room().label("Room B")).room(new Room().label("Room A"));
+    OrganisationUnit ou = new OrganisationUnit().setRoom(new Room().setLabel("Room B")).setRoom(new Room().setLabel("Room A"));
 
-    assertEquals("Room A,Room B", toJoinedString(ou.rooms()));
+    assertEquals("Room A,Room B", toJoinedString(ou.getRooms()));
   }
 
   @Test
   public void testAddSecuritRoles() {
-    OrganisationUnit ou = new OrganisationUnit().role(new SecurityRole().label("role1")).role(new SecurityRole().label("role2"));
+    OrganisationUnit ou = new OrganisationUnit().addRole(new SecurityRole().setLabel("role1")).addRole(new SecurityRole().setLabel("role2"));
 
-    assertEquals("role1,role2", toJoinedString(ou.roles()));
+    assertEquals("role1,role2", toJoinedString(ou.getRoles()));
   }
 
   @Test
   public void testEmptyReturnsEmptyRoomlist() {
     OrganisationUnit ou = new OrganisationUnit();
-    assertNotNull(ou.rooms());
-    assertTrue(ou.rooms().size() == 0);
+    assertNotNull(ou.getRooms());
+    assertTrue(ou.getRooms().size() == 0);
   }
 
   @Test
   public void testEmptyReturnsEmptyRolelist() {
     OrganisationUnit ou = new OrganisationUnit();
-    assertNotNull(ou.roles());
-    assertTrue(ou.roles().size() == 0);
+    assertNotNull(ou.getRoles());
+    assertTrue(ou.getRoles().size() == 0);
   }
 }

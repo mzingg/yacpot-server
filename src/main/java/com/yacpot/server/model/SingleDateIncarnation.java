@@ -13,12 +13,12 @@ public class SingleDateIncarnation extends AbstractGenericModel<SingleDateIncarn
     this.date = date;
   }
 
-  public LocalDateTime date() {
+  public LocalDateTime getDate() {
     return date;
   }
 
   @Override
-  public LocalDateTime sortDate(LocalDateTime anchorDate) {
+  public LocalDateTime getSortDate(LocalDateTime anchorDate) {
     // LocalDateTime is immutable - so we can just return it here.
     return date;
   }

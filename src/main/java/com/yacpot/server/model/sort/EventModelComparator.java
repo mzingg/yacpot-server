@@ -27,8 +27,8 @@ public class EventModelComparator extends AbstractModelComparator<Event, EventMo
   public int compare(Event o1, Event o2) {
     if (!sortByEventDate) return super.compare(o1, o2);
 
-    LocalDateTime sortDate1 = o1.timeline().sortDate(anchorDate);
-    LocalDateTime sortDate2 = o2.timeline().sortDate(anchorDate);
+    LocalDateTime sortDate1 = o1.getTimeline().getSortDate(anchorDate);
+    LocalDateTime sortDate2 = o2.getTimeline().getSortDate(anchorDate);
 
     if (sortDate1.equals(sortDate2)) {
       byLabel();

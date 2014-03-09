@@ -26,29 +26,29 @@ public class Task<T extends Task> {
     this.attributes = attributes;
   }
 
-  public String path() {
+  public String getPath() {
     return this.path;
   }
 
   @SuppressWarnings("unchecked")
-  public T operation(Operation operation) {
+  public T setOperation(Operation operation) {
     this.operation = operation;
     return (T) this;
   }
 
-  public Operation operation() {
+  public Operation getOperation() {
     return this.operation;
   }
 
-  public void parameter(String... parameters) {
+  public void addParameter(String... parameters) {
     this.parameters.addAll(Arrays.asList(parameters));
   }
 
-  public int pathParameterCount() {
+  public int getPathParameterCount() {
     return this.parameters.size();
   }
 
-  public String pathParameter(int idx) {
+  public String getPathParameter(int idx) {
     return this.parameters.get(idx);
   }
 

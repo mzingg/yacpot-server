@@ -24,27 +24,27 @@ public abstract class AbstractAuthenticationSession implements AuthenticationSes
   }
 
   @Override
-  public UUID sessionId() {
+  public UUID getSessionId() {
     return sessionId;
   }
 
   @Override
-  public LocalDateTime expiration() {
+  public LocalDateTime getExpiration() {
     return expiration;
   }
 
   @Override
-  public User user() {
+  public User getUser() {
     return user;
   }
 
   @Override
-  public Collection<SecurityRole> systemRoles() {
+  public Collection<SecurityRole> getSystemRoles() {
     return new ArrayList<>();
   }
 
   @Override
-  public Collection<SecurityRole> rolesInOrganisationUnit(OrganisationUnit ou) {
+  public Collection<SecurityRole> getRolesInOrganisationUnit(OrganisationUnit ou) {
     return new ArrayList<>();
   }
 }

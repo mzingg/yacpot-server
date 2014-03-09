@@ -17,18 +17,18 @@ public class GenericModelTest {
     GenericModel im = new AbstractGenericModel() {
     };
 
-    assertNotNull(im.id());
-    assertNotNull(im.label());
-    assertNotNull(im.timestamp());
+    assertNotNull(im.getId());
+    assertNotNull(im.getLabel());
+    assertNotNull(im.setTimestamp());
   }
 
   @Test
   public void testEqualityOnlyWithId() {
     UUID aUUID = UUID.randomUUID();
     GenericModel aIdentityObject = new AbstractGenericModel() {
-    }.id(aUUID).label("Label is ignored");
+    }.setId(aUUID).setLabel("Label is ignored");
     GenericModel anotherIdentityObject = new AbstractGenericModel() {
-    }.id(aUUID).orderWeight(10);
+    }.setId(aUUID).setOrderWeight(10);
 
     assertEquals(aIdentityObject, anotherIdentityObject);
     assertEquals(aIdentityObject.hashCode(), anotherIdentityObject.hashCode());
@@ -37,10 +37,10 @@ public class GenericModelTest {
   @Test
   public void testSetterChaining() {
     GenericModel aIdentityObject = new AbstractGenericModel() {
-    }.label("Label").orderWeight(10);
+    }.setLabel("Label").setOrderWeight(10);
 
-    assertEquals("Label", aIdentityObject.label());
-    assertEquals(10, aIdentityObject.orderWeight());
+    assertEquals("Label", aIdentityObject.getLabel());
+    assertEquals(10, aIdentityObject.getOrderWeight());
   }
 
   @Test
@@ -107,13 +107,13 @@ public class GenericModelTest {
   private Collection<GenericModel> getIdentityModels(Comparator<GenericModel> comparator) {
     List<GenericModel> orderedList = new ArrayList<>();
     orderedList.add(new AbstractGenericModel() {
-    }.label("A").orderWeight(10).timestamp(new LocalDateTime(2014, 2, 22, 14, 0, 0)));
+    }.setLabel("A").setOrderWeight(10).getTimestamp(new LocalDateTime(2014, 2, 22, 14, 0, 0)));
     orderedList.add(new AbstractGenericModel() {
-    }.label("Z").orderWeight(50).timestamp(new LocalDateTime(2014, 2, 22, 15, 0, 0)));
+    }.setLabel("Z").setOrderWeight(50).getTimestamp(new LocalDateTime(2014, 2, 22, 15, 0, 0)));
     orderedList.add(new AbstractGenericModel() {
-    }.label("E").orderWeight(70).timestamp(new LocalDateTime(2014, 2, 22, 16, 0, 0)));
+    }.setLabel("E").setOrderWeight(70).getTimestamp(new LocalDateTime(2014, 2, 22, 16, 0, 0)));
     orderedList.add(new AbstractGenericModel() {
-    }.label("Y").orderWeight(5).timestamp(new LocalDateTime(2014, 2, 22, 17, 0, 0)));
+    }.setLabel("Y").setOrderWeight(5).getTimestamp(new LocalDateTime(2014, 2, 22, 17, 0, 0)));
 
     Collections.sort(orderedList, comparator);
     return orderedList;

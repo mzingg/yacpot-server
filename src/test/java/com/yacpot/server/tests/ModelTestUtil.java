@@ -12,7 +12,7 @@ public final class ModelTestUtil {
   public static String toJoinedString(Collection<? extends GenericModel> orderedList) {
     List<String> result = new ArrayList<>();
     for (GenericModel model : orderedList) {
-      result.add(model.label());
+      result.add(model.getLabel());
     }
     return StringUtils.join(result, ",");
   }

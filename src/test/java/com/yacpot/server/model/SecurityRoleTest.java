@@ -8,8 +8,8 @@ public class SecurityRoleTest {
 
   @Test
   public void testSettingDescription() {
-    SecurityRole testObj = new SecurityRole().description("Expected description");
+    SecurityRole testObj = new SecurityRole().setDescription("Expected getDescription");
 
-    assertEquals("Expected description", testObj.description());
+    assertEquals("Expected getDescription", testObj.getDescription());
   }
 }

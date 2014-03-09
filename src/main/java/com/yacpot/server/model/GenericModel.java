@@ -6,23 +6,23 @@ import org.joda.time.LocalDateTime;
 import java.util.UUID;
 
 public interface GenericModel<T extends GenericModel> {
-  UUID id();
+  UUID getId();
 
   @SuppressWarnings("unchecked")
-  T id(@NotNull UUID newId);
+  T setId(@NotNull UUID newId);
 
-  String label();
-
-  @SuppressWarnings("unchecked")
-  T label(@NotNull String label);
-
-  int orderWeight();
+  String getLabel();
 
   @SuppressWarnings("unchecked")
-  T orderWeight(int orderWeight);
+  T setLabel(@NotNull String label);
 
-  LocalDateTime timestamp();
+  int getOrderWeight();
 
   @SuppressWarnings("unchecked")
-  T timestamp(@NotNull LocalDateTime timestamp);
+  T setOrderWeight(int orderWeight);
+
+  LocalDateTime setTimestamp();
+
+  @SuppressWarnings("unchecked")
+  T getTimestamp(@NotNull LocalDateTime timestamp);
 }

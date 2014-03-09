@@ -12,8 +12,8 @@ public class JettyAuthenticationTest {
   public void testNoAuthReturnsAnonymousSession() throws Exception {
 
     JettyRequestFactory factory = new JettyRequestFactory();
-    JettyAuthenticationSession session = factory.getSession(aRequest("GET", "/a/path"));
+    JettyAuthenticationSession session = factory.getSession(aRequest("GET", "/a/getPath"));
 
-    Assert.assertEquals(User.ANONYMOUS, session.user());
+    Assert.assertEquals(User.ANONYMOUS, session.getUser());
   }
 }

@@ -17,19 +17,19 @@ public class EventTimeline extends AbstractGenericModel<EventTimeline> {
     this.incarnations = new ArrayList<>();
   }
 
-  public EventTimeline incarnation(EventIncarnation toAdd) {
+  public EventTimeline addIncarnation(EventIncarnation toAdd) {
     this.incarnations.add(toAdd);
     return this;
   }
 
-  public List<EventIncarnation> sortedIncarnations(LocalDateTime anchorDate) {
+  public List<EventIncarnation> getSortedIncarnations(LocalDateTime anchorDate) {
     List<EventIncarnation> clonedList = new ArrayList<>(incarnations);
 
     final LocalDateTime anchorDateForAnonClass = anchorDate;
     Collections.sort(clonedList, new Comparator<EventIncarnation>() {
       @Override
       public int compare(EventIncarnation o1, EventIncarnation o2) {
-        return o1.sortDate(anchorDateForAnonClass).compareTo(o2.sortDate(anchorDateForAnonClass));
+        return o1.getSortDate(anchorDateForAnonClass).compareTo(o2.getSortDate(anchorDateForAnonClass));
       }
     });
 
@@ -45,25 +45,25 @@ public class EventTimeline extends AbstractGenericModel<EventTimeline> {
     return false;
   }
 
-  public LocalDateTime sortDate(LocalDateTime anchorDate) {
+  public LocalDateTime getSortDate(LocalDateTime anchorDate) {
     if (incarnations.size() == 0) {
-      return timestamp();
+      return setTimestamp();
     }
 
     // The algorithm below should work as well without this if.
-    // But since having only one incarnation will be the main use case the statement is here for optimzation.
+    // But since having only one addIncarnation will be the main use case the statement is here for optimzation.
     if (incarnations.size() == 1) {
-      return incarnations.get(0).sortDate(anchorDate);
+      return incarnations.get(0).getSortDate(anchorDate);
     }
 
-    List<EventIncarnation> sortedIncarnations = sortedIncarnations(anchorDate);
+    List<EventIncarnation> sortedIncarnations = getSortedIncarnations(anchorDate);
 
-    // Multiple incarnations: find the nearest to the anchor date of these values < anchorDate
+    // Multiple incarnations: find the nearest to the anchor getDate of these values < anchorDate
     // if there are values > anchorDate return the first of these.
     int resultIndex = 0;
     int minimalSecondDifference = Integer.MAX_VALUE;
     for (int i = 0; i < sortedIncarnations.size(); i++) {
-      LocalDateTime currentDate = sortedIncarnations.get(i).sortDate(anchorDate);
+      LocalDateTime currentDate = sortedIncarnations.get(i).getSortDate(anchorDate);
       if (currentDate.isAfter(anchorDate)) {
         resultIndex = i;
         break;
@@ -75,6 +75,6 @@ public class EventTimeline extends AbstractGenericModel<EventTimeline> {
       }
     }
 
-    return incarnations.get(resultIndex).sortDate(anchorDate);
+    return incarnations.get(resultIndex).getSortDate(anchorDate);
   }
 }

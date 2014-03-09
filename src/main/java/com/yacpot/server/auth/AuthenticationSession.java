@@ -11,13 +11,13 @@ import java.util.UUID;
 
 public interface AuthenticationSession extends Serializable {
 
-  UUID sessionId();
+  UUID getSessionId();
 
-  LocalDateTime expiration();
+  LocalDateTime getExpiration();
 
-  User user();
+  User getUser();
 
-  Collection<SecurityRole> systemRoles();
+  Collection<SecurityRole> getSystemRoles();
 
-  Collection<SecurityRole> rolesInOrganisationUnit(OrganisationUnit ou);
+  Collection<SecurityRole> getRolesInOrganisationUnit(OrganisationUnit ou);
 }

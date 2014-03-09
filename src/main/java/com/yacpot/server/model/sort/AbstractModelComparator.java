@@ -53,13 +53,13 @@ public abstract class AbstractModelComparator<T extends GenericModel, U extends 
   @Override
   public int compare(T o1, T o2) {
     if (orderStrategy.equals(OrderStrategy.LABEL)) {
-      return sortDirectionMultiplier * o1.label().compareTo(o2.label());
+      return sortDirectionMultiplier * o1.getLabel().compareTo(o2.getLabel());
     }
     if (orderStrategy.equals(OrderStrategy.WEIGHT)) {
-      return sortDirectionMultiplier * Integer.valueOf(o1.orderWeight()).compareTo(o2.orderWeight());
+      return sortDirectionMultiplier * Integer.valueOf(o1.getOrderWeight()).compareTo(o2.getOrderWeight());
     }
     if (orderStrategy.equals(OrderStrategy.TIMESTAMP)) {
-      return sortDirectionMultiplier * o1.timestamp().compareTo(o2.timestamp());
+      return sortDirectionMultiplier * o1.setTimestamp().compareTo(o2.setTimestamp());
     }
     return 0;
   }

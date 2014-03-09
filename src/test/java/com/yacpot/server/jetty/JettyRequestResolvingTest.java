@@ -15,7 +15,7 @@ public class JettyRequestResolvingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    assertEquals("aTestResult", mapping.resolve(factory.getTask(aRequest("GET", "/a/path"))).json());
+    assertEquals("aTestResult", mapping.resolve(factory.getTask(aRequest("GET", "/a/getPath"))).getJson());
   }
 
   @Test
@@ -24,7 +24,7 @@ public class JettyRequestResolvingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    assertEquals("aTestResult", mapping.resolve(factory.getTask(aRequestWithContextPath("GET", "/context/a/path"))).json());
+    assertEquals("aTestResult", mapping.resolve(factory.getTask(aRequestWithContextPath("GET", "/context/a/getPath"))).getJson());
   }
 
   @Test(expected = TaskException.class)
@@ -33,23 +33,23 @@ public class JettyRequestResolvingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    mapping.resolve(factory.getTask(aRequestWithContextPath("GET", "/somewhereelse/a/path")));
+    mapping.resolve(factory.getTask(aRequestWithContextPath("GET", "/somewhereelse/a/getPath")));
   }
 
   @Test
   public void testMethodMapping() throws Exception {
     JettyRequestFactory factory = new JettyRequestFactory();
-    assertEquals(Operation.CREATE, factory.getTask(aRequest("PUT", "/a/path")).operation());
-    assertEquals(Operation.READ, factory.getTask(aRequest("GET", "/a/path")).operation());
-    assertEquals(Operation.UPDATE, factory.getTask(aRequest("POST", "/a/path")).operation());
-    assertEquals(Operation.DELETE, factory.getTask(aRequest("DELETE", "/a/path")).operation());
-    assertEquals(Operation.READ, factory.getTask(aRequest("SOMEOTHER", "/a/path")).operation());
+    assertEquals(Operation.CREATE, factory.getTask(aRequest("PUT", "/a/getPath")).getOperation());
+    assertEquals(Operation.READ, factory.getTask(aRequest("GET", "/a/getPath")).getOperation());
+    assertEquals(Operation.UPDATE, factory.getTask(aRequest("POST", "/a/getPath")).getOperation());
+    assertEquals(Operation.DELETE, factory.getTask(aRequest("DELETE", "/a/getPath")).getOperation());
+    assertEquals(Operation.READ, factory.getTask(aRequest("SOMEOTHER", "/a/getPath")).getOperation());
   }
 
   @Test
   public void testParameterPassing() throws Exception {
     JettyRequestFactory factory = new JettyRequestFactory();
-    JettyRequestTask testObj = factory.getTask(aRequestWithParameters("PUT", "/a/path", "param1", "value"));
+    JettyRequestTask testObj = factory.getTask(aRequestWithParameters("PUT", "/a/getPath", "param1", "value"));
 
     assertEquals("value", testObj.getAttribute("param1"));
   }

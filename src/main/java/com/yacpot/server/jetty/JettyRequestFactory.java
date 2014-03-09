@@ -37,7 +37,7 @@ public class JettyRequestFactory implements TaskFactory<JettyRequestTask, Reques
       path = StringUtils.substringAfter(path, contextPath);
     }
 
-    return new JettyRequestTask(path, jettyRequest.getParameterMap()).operation(operation);
+    return new JettyRequestTask(path, jettyRequest.getParameterMap()).setOperation(operation);
   }
 
   protected Operation mapMethodToOperation(String method) {

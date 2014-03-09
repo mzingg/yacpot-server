@@ -18,7 +18,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    mapping.resolve(new Task("/a/path/invalid1"));
+    mapping.resolve(new Task("/a/getPath/invalid1"));
   }
 
   @Test(expected = MappingException.class)
@@ -26,7 +26,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    mapping.resolve(new Task("/a/path/invalid2/15"));
+    mapping.resolve(new Task("/a/getPath/invalid2/15"));
   }
 
   @Test(expected = MappingException.class)
@@ -34,7 +34,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    mapping.resolve(new Task("/a/path/invalid3/aParam"));
+    mapping.resolve(new Task("/a/getPath/invalid3/aParam"));
   }
 
   @Test(expected = MappingException.class)
@@ -42,7 +42,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    mapping.resolve(new Task("/a/path/invalid4/aParam/andAnother"));
+    mapping.resolve(new Task("/a/getPath/invalid4/aParam/andAnother"));
   }
 
   @Test(expected = MappingException.class)
@@ -50,7 +50,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    mapping.resolve(new Task("/a/path/invalid5"));
+    mapping.resolve(new Task("/a/getPath/invalid5"));
   }
 
   @Test
@@ -58,7 +58,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    assertEquals(TaskResult.NotFoundResult, mapping.resolve(new Task("/a/path").operation(Operation.CREATE)));
+    assertEquals(TaskResult.NotFoundResult, mapping.resolve(new Task("/a/getPath").setOperation(Operation.CREATE)));
   }
 
   @Test
@@ -66,7 +66,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    assertEquals("aTestResult", mapping.resolve(new Task("/a/path")).json());
+    assertEquals("aTestResult", mapping.resolve(new Task("/a/getPath")).getJson());
   }
 
   @Test
@@ -74,7 +74,7 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    assertEquals("77", mapping.resolve(new Task("/a/path/p1/77")).json());
+    assertEquals("77", mapping.resolve(new Task("/a/getPath/p1/77")).getJson());
   }
 
   @Test
@@ -82,6 +82,6 @@ public class ApplicationMappingTest {
     ApplicationMapping<Task> mapping = new ApplicationMapping<>();
     mapping.registerResource(new TestResource());
 
-    assertEquals("23", mapping.resolve(new Task("/a/path/p2/23")).json());
+    assertEquals("23", mapping.resolve(new Task("/a/getPath/p2/23")).getJson());
   }
 }
