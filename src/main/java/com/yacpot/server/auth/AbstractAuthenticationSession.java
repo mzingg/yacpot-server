@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-public class AnonymousSession implements AuthenticationSession {
+public abstract class AbstractAuthenticationSession implements AuthenticationSession {
 
   private UUID sessionId;
 
@@ -17,9 +17,9 @@ public class AnonymousSession implements AuthenticationSession {
 
   private User user;
 
-  public AnonymousSession() {
+  public AbstractAuthenticationSession() {
     this.user = User.ANONYMOUS;
-    this.expiration = LocalDateTime.now().plusYears(1);
+    this.expiration = LocalDateTime.now().plusYears(10);
     this.sessionId = UUID.randomUUID();
   }
 
