@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public abstract class AbstractGenericModel<T extends GenericModel> implements Serializable, GenericModel<T> {
 
-  private UUID id;
+  private String id;
 
   private LocalDateTime timestamp;
 
@@ -17,20 +17,20 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
   private transient int orderWeight;
 
   public AbstractGenericModel() {
-    this.id = UUID.randomUUID();
+    this.id = UUID.randomUUID().toString();
     this.orderWeight = 0;
     this.label = id.toString();
     timestamp = LocalDateTime.now();
   }
 
   @Override
-  public UUID getId() {
+  public String getId() {
     return id;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T setId(@NotNull UUID newId) {
+  public T setId(@NotNull String newId) {
     this.id = newId;
     return (T) this;
   }

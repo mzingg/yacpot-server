@@ -24,7 +24,7 @@ public class GenericModelTest {
 
   @Test
   public void testEqualityOnlyWithId() {
-    UUID aUUID = UUID.randomUUID();
+    String aUUID = UUID.randomUUID().toString();
     GenericModel aIdentityObject = new AbstractGenericModel() {
     }.setId(aUUID).setLabel("Label is ignored");
     GenericModel anotherIdentityObject = new AbstractGenericModel() {
