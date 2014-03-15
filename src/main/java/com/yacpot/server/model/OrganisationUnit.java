@@ -15,7 +15,7 @@ public class OrganisationUnit extends AbstractGenericModel<OrganisationUnit> {
     roleList = new ArrayList<>();
   }
 
-  public OrganisationUnit setRoom(Room room) {
+  public OrganisationUnit addRoom(Room room) {
     roomList.add(room);
     return this;
   }

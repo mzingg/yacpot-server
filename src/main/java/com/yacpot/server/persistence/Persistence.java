@@ -8,14 +8,15 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Persistence<T extends GenericModel> implements Closeable {
+public class Persistence implements Closeable {
+
+  private final static String ID_FIELD_NAME = "id";
+  private final static String CLASS_FIELD_NAME = "class";
 
   private final static Map<Class<?>, Class<?>> boxedTypes = new HashMap<>();
+
   static {
     boxedTypes.put(int.class, Integer.class);
     boxedTypes.put(long.class, Long.class);
@@ -37,12 +38,36 @@ public class Persistence<T extends GenericModel> implements Closeable {
     return this.database;
   }
 
-  public T findById(String id, Class<T> desiredObjectType) throws PersistenceException {
+  public GenericModel<?> resolveById(String id) throws PersistenceException {
+    try {
+      for (String collectionName : database.getCollectionNames()) {
+        DBCollection collection = database.getCollection(collectionName);
+        DBObject mongoObj = collection.findOne(new BasicDBObject(ID_FIELD_NAME, id));
+        if (mongoObj == null || !mongoObj.containsField(CLASS_FIELD_NAME) || !(mongoObj.get(CLASS_FIELD_NAME) instanceof String)) {
+          continue;
+        }
+
+        String className = (String) mongoObj.get(CLASS_FIELD_NAME);
+        Class<?> modelClass = Class.forName(className);
+        Object model = modelClass.newInstance();
+
+        fillModelWith(model, mongoObj);
+
+        return (GenericModel<?>) model;
+      }
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+      throw new PersistenceException(e.getLocalizedMessage(), e);
+    }
+
+    return null;
+  }
+
+  public <T> T findById(String id, Class<T> desiredObjectType) throws PersistenceException {
     try {
       T result = desiredObjectType.newInstance();
 
       DBCollection collection = getCollection(desiredObjectType);
-      DBObject mongoObj = collection.findOne(new BasicDBObject("id", id));
+      DBObject mongoObj = collection.findOne(new BasicDBObject(ID_FIELD_NAME, id));
       if (mongoObj == null) {
         return null;
       }
@@ -55,9 +80,8 @@ public class Persistence<T extends GenericModel> implements Closeable {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public void save(T model) throws PersistenceException {
-    DBCollection collection = getCollection((Class<T>) model.getClass());
+  public void save(Object model) throws PersistenceException {
+    DBCollection collection = getCollection(model.getClass());
     BasicDBObject mongoObj = new BasicDBObject();
     mapModelTo(model, mongoObj);
 
@@ -66,18 +90,31 @@ public class Persistence<T extends GenericModel> implements Closeable {
   }
 
   protected void ensureIndex(DBCollection collection) {
-    collection.ensureIndex(new BasicDBObject("id", 1), new BasicDBObject("unique", true));
+    collection.ensureIndex(new BasicDBObject(ID_FIELD_NAME, 1), new BasicDBObject("unique", true));
   }
 
-  protected void fillModelWith(T model, DBObject mongoObj) throws PersistenceException {
-    for (Method setter : getMethodsStartingWith(model.getClass(), "set")) {
+  protected void fillModelWith(Object model, DBObject mongoObj) throws PersistenceException {
+    for (Method setter : getMethodsStartingWith(model.getClass(), "set", "add")) {
       String propertyName = getPropertyName(setter);
+      if (setter.getName().startsWith("add")) {
+        propertyName += "s";
+      }
       try {
         Class<?>[] signature = setter.getParameterTypes();
         Class<?> targetType = getBoxedClass(signature[0]);
         Object mongoValue = reverseMapSpecialValues(mongoObj.get(propertyName), targetType);
-        if (mongoValue != null && signature.length == 1 && targetType.isAssignableFrom(mongoValue.getClass())) {
-          setter.invoke(model, mongoValue);
+        if (mongoValue != null && signature.length == 1) {
+          if (GenericModel.class.isAssignableFrom(targetType) && mongoValue instanceof String) {
+            GenericModel<?> referencedValue = resolveById((String)mongoValue);
+            setter.invoke(model, referencedValue);
+          } else if (GenericModel.class.isAssignableFrom(targetType) && mongoValue instanceof Collection<?>) {
+            for (Object entry : (Collection<?>)mongoValue) {
+              GenericModel<?> referencedValue = resolveById((String)entry);
+              setter.invoke(model, referencedValue);
+            }
+          } else if (targetType.isAssignableFrom(mongoValue.getClass())) {
+            setter.invoke(model, mongoValue);
+          }
         }
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new PersistenceException(e.getLocalizedMessage(), e);
@@ -92,34 +129,34 @@ public class Persistence<T extends GenericModel> implements Closeable {
     return boxedTypes.get(primitiveOrConcreteClass);
   }
 
-  protected void mapModelTo(T model, BasicDBObject mongoObj) throws PersistenceException {
+  protected void mapModelTo(Object model, BasicDBObject mongoObj) throws PersistenceException {
     for (Method getter : getMethodsStartingWith(model.getClass(), "get", "is")) {
+      Class<?>[] signature = getter.getParameterTypes();
       String propertyName = getPropertyName(getter);
-      if (getter.getParameterTypes().length > 0 || "class".equals(propertyName)) {
+      if (signature.length > 0) {
         continue;
       }
       try {
-        mongoObj.append(propertyName, mapSpecialValues(getter.invoke(model)));
+        Class<?> sourceType = getter.getReturnType();
+        if (GenericModel.class.isAssignableFrom(sourceType)) {
+          GenericModel<?> subModel = (GenericModel<?>)getter.invoke(model);
+          save(subModel);
+          mongoObj.append(propertyName, subModel.getId());
+        } else if (Collection.class.isAssignableFrom(sourceType)) {
+          List<String> idList = new ArrayList<>();
+          for (Object listEntry : (Collection<?>)getter.invoke(model)) {
+            GenericModel<?> subModel = (GenericModel<?>)listEntry;
+            save(subModel);
+            idList.add(subModel.getId());
+          }
+          mongoObj.append(propertyName, idList);
+        } else {
+          mongoObj.append(propertyName, mapSpecialValues(getter.invoke(model)));
+        }
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new PersistenceException(e.getLocalizedMessage(), e);
       }
     }
-  }
-
-  private Object mapSpecialValues(Object o) {
-    if (o instanceof LocalDateTime) {
-      return ((LocalDateTime)o).toDateTime().getMillis();
-    }
-
-    return o;
-  }
-
-  private Object reverseMapSpecialValues(Object o, Class<?> targetType) {
-    if (LocalDateTime.class == targetType && o instanceof Long) {
-      return new LocalDateTime(((Long)o).longValue());
-    }
-
-    return o;
   }
 
   private List<Method> getMethodsStartingWith(Class<?> modelClass, String... prefixes) {
@@ -143,8 +180,28 @@ public class Persistence<T extends GenericModel> implements Closeable {
     return Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
   }
 
-  protected DBCollection getCollection(Class<T> desiredObjectType) {
+  protected DBCollection getCollection(Class<?> desiredObjectType) {
     return getDatabase().getCollection(desiredObjectType.getSimpleName());
+  }
+
+  protected Object mapSpecialValues(Object o) {
+    if (o instanceof LocalDateTime) {
+      return ((LocalDateTime) o).toDateTime().getMillis();
+    }
+
+    if (o instanceof Class<?>) {
+      return ((Class<?>) o).getName();
+    }
+
+    return o;
+  }
+
+  protected Object reverseMapSpecialValues(Object o, Class<?> targetType) {
+    if (LocalDateTime.class == targetType && o instanceof Long) {
+      return new LocalDateTime(((Long) o).longValue());
+    }
+
+    return o;
   }
 
   @Override

@@ -9,7 +9,7 @@ public class OrganisationUnitTest {
 
   @Test
   public void testAddRooms() {
-    OrganisationUnit ou = new OrganisationUnit().setRoom(new Room().setLabel("Room B")).setRoom(new Room().setLabel("Room A"));
+    OrganisationUnit ou = new OrganisationUnit().addRoom(new Room().setLabel("Room B")).addRoom(new Room().setLabel("Room A"));
 
     assertEquals("Room A,Room B", toJoinedString(ou.getRooms()));
   }

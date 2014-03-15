@@ -26,6 +26,11 @@ public class Room extends AbstractGenericModel<Room> {
     return this;
   }
 
+  public Room setChannel(Channel channel) {
+    this.channel = channel;
+    return this;
+  }
+
   public Channel getChannel() {
     return channel;
   }

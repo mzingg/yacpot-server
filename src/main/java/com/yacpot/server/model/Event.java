@@ -5,7 +5,7 @@ import org.joda.time.LocalDateTime;
 
 public class Event extends AbstractGenericModel<Event> {
 
-  private final EventTimeline timeline;
+  private EventTimeline timeline;
 
   public Event() {
     this.timeline = new EventTimeline();
@@ -25,6 +25,11 @@ public class Event extends AbstractGenericModel<Event> {
 
   public EventTimeline getTimeline() {
     return timeline;
+  }
+
+  public Event setTimeline(EventTimeline timeline) {
+    this.timeline = timeline;
+    return this;
   }
 
 }
