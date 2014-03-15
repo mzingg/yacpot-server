@@ -13,13 +13,13 @@ public class Event extends AbstractGenericModel<Event> {
 
   // The getTimeline inherits the setTimestamp from the addEvent (for default sorting)
   @Override
-  public LocalDateTime setTimestamp() {
-    return getTimeline().setTimestamp();
+  public LocalDateTime getTimestamp() {
+    return getTimeline().getTimestamp();
   }
 
   @Override
-  public Event getTimestamp(@NotNull LocalDateTime timestamp) {
-    getTimeline().getTimestamp(timestamp);
+  public Event setTimestamp(@NotNull LocalDateTime timestamp) {
+    getTimeline().setTimestamp(timestamp);
     return this;
   }
 

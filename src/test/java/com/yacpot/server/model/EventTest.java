@@ -23,8 +23,8 @@ public class EventTest {
   @Test
   public void testTimelineInheritsTimestamp() {
     LocalDateTime timestamp = new LocalDateTime(2014, 1, 10, 10, 0);
-    Event testObj = new Event().getTimestamp(timestamp);
-    assertEquals(testObj.setTimestamp(), testObj.getTimeline().setTimestamp());
+    Event testObj = new Event().setTimestamp(timestamp);
+    assertEquals(testObj.getTimestamp(), testObj.getTimeline().getTimestamp());
   }
 
   @Test

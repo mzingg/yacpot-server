@@ -21,8 +21,8 @@ public interface GenericModel<T extends GenericModel> {
   @SuppressWarnings("unchecked")
   T setOrderWeight(int orderWeight);
 
-  LocalDateTime setTimestamp();
+  LocalDateTime getTimestamp();
 
   @SuppressWarnings("unchecked")
-  T getTimestamp(@NotNull LocalDateTime timestamp);
+  T setTimestamp(@NotNull LocalDateTime timestamp);
 }

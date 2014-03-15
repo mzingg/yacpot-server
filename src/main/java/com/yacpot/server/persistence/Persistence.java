@@ -2,21 +2,34 @@ package com.yacpot.server.persistence;
 
 import com.mongodb.*;
 import com.yacpot.server.model.GenericModel;
+import org.joda.time.LocalDateTime;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Persistence<T extends GenericModel> implements Closeable {
 
-  private MongoClient mongo;
+  private final static Map<Class<?>, Class<?>> boxedTypes = new HashMap<>();
+  static {
+    boxedTypes.put(int.class, Integer.class);
+    boxedTypes.put(long.class, Long.class);
+    boxedTypes.put(double.class, Double.class);
+    boxedTypes.put(float.class, Float.class);
+    boxedTypes.put(boolean.class, Boolean.class);
+    boxedTypes.put(char.class, Character.class);
+    boxedTypes.put(byte.class, Byte.class);
+    boxedTypes.put(short.class, Short.class);
+  }
+
   private DB database;
 
   public Persistence(MongoClient mongo, String databaseName) {
-    this.mongo = mongo;
     this.database = mongo.getDB(databaseName);
   }
 
@@ -60,15 +73,23 @@ public class Persistence<T extends GenericModel> implements Closeable {
     for (Method setter : getMethodsStartingWith(model.getClass(), "set")) {
       String propertyName = getPropertyName(setter);
       try {
-        Object mongoValue = mongoObj.get(propertyName);
         Class<?>[] signature = setter.getParameterTypes();
-        if (mongoValue != null && signature.length == 1 && signature[0].isAssignableFrom(mongoValue.getClass())) {
+        Class<?> targetType = getBoxedClass(signature[0]);
+        Object mongoValue = reverseMapSpecialValues(mongoObj.get(propertyName), targetType);
+        if (mongoValue != null && signature.length == 1 && targetType.isAssignableFrom(mongoValue.getClass())) {
           setter.invoke(model, mongoValue);
         }
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new PersistenceException(e.getLocalizedMessage(), e);
       }
     }
+  }
+
+  private Class<?> getBoxedClass(Class<?> primitiveOrConcreteClass) {
+    if (!boxedTypes.containsKey(primitiveOrConcreteClass))
+      return primitiveOrConcreteClass;
+
+    return boxedTypes.get(primitiveOrConcreteClass);
   }
 
   protected void mapModelTo(T model, BasicDBObject mongoObj) throws PersistenceException {
@@ -78,11 +99,27 @@ public class Persistence<T extends GenericModel> implements Closeable {
         continue;
       }
       try {
-        mongoObj.append(propertyName, getter.invoke(model));
+        mongoObj.append(propertyName, mapSpecialValues(getter.invoke(model)));
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new PersistenceException(e.getLocalizedMessage(), e);
       }
     }
+  }
+
+  private Object mapSpecialValues(Object o) {
+    if (o instanceof LocalDateTime) {
+      return ((LocalDateTime)o).toDateTime().getMillis();
+    }
+
+    return o;
+  }
+
+  private Object reverseMapSpecialValues(Object o, Class<?> targetType) {
+    if (LocalDateTime.class == targetType && o instanceof Long) {
+      return new LocalDateTime(((Long)o).longValue());
+    }
+
+    return o;
   }
 
   private List<Method> getMethodsStartingWith(Class<?> modelClass, String... prefixes) {

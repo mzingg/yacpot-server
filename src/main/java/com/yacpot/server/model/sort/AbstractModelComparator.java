@@ -59,7 +59,7 @@ public abstract class AbstractModelComparator<T extends GenericModel, U extends 
       return sortDirectionMultiplier * Integer.valueOf(o1.getOrderWeight()).compareTo(o2.getOrderWeight());
     }
     if (orderStrategy.equals(OrderStrategy.TIMESTAMP)) {
-      return sortDirectionMultiplier * o1.setTimestamp().compareTo(o2.setTimestamp());
+      return sortDirectionMultiplier * o1.getTimestamp().compareTo(o2.getTimestamp());
     }
     return 0;
   }

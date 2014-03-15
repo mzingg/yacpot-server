@@ -45,11 +45,11 @@ public class RoomTest {
 
   @Test
   public void testEmptyEventsSortedByTimestamp() {
-    Event first = new Event().setLabel("Event Z").getTimestamp(new LocalDateTime(2014, 1, 10, 10, 0));
+    Event first = new Event().setLabel("Event Z").setTimestamp(new LocalDateTime(2014, 1, 10, 10, 0));
 
-    Event second = new Event().setLabel("Event A").getTimestamp(new LocalDateTime(2014, 3, 10, 10, 0));
+    Event second = new Event().setLabel("Event A").setTimestamp(new LocalDateTime(2014, 3, 10, 10, 0));
 
-    Event third = new Event().setLabel("Event D").getTimestamp(new LocalDateTime(2014, 2, 10, 10, 0));
+    Event third = new Event().setLabel("Event D").setTimestamp(new LocalDateTime(2014, 2, 10, 10, 0));
 
     LocalDateTime anchor = new LocalDateTime(2014, 2, 10, 10, 0);
 

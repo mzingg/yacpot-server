@@ -47,7 +47,7 @@ public class EventTimeline extends AbstractGenericModel<EventTimeline> {
 
   public LocalDateTime getSortDate(LocalDateTime anchorDate) {
     if (incarnations.size() == 0) {
-      return setTimestamp();
+      return getTimestamp();
     }
 
     // The algorithm below should work as well without this if.

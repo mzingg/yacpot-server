@@ -60,13 +60,13 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
   }
 
   @Override
-  public LocalDateTime setTimestamp() {
+  public LocalDateTime getTimestamp() {
     return this.timestamp;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T getTimestamp(@NotNull LocalDateTime timestamp) {
+  public T setTimestamp(@NotNull LocalDateTime timestamp) {
     this.timestamp = timestamp;
     return (T) this;
   }
