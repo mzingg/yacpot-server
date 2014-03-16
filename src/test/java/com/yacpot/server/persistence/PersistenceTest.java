@@ -2,6 +2,7 @@ package com.yacpot.server.persistence;
 
 import com.mongodb.MongoClient;
 import com.yacpot.server.model.*;
+import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class PersistenceTest {
   @Test
   public void testNotFoundReturnNull() throws Exception {
     try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      EmptyGenericModel testObj = persistence.findById("does-not-exists", EmptyGenericModel.class);
+      EmptyGenericModel testObj = persistence.resolveById(ObjectId.get().toString(), EmptyGenericModel.class);
 
       assertNull(testObj);
     }
@@ -35,7 +36,7 @@ public class PersistenceTest {
   @Test
   public void testResolveNotFoundReturnNull() throws Exception {
     try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      GenericModel<?> testObj = persistence.resolveById("does-not-exists");
+      GenericModel<?> testObj = persistence.resolveById(ObjectId.get().toString());
 
       assertNull(testObj);
     }
@@ -67,7 +68,7 @@ public class PersistenceTest {
 
       persistence.save(expected);
 
-      EmptyGenericModel testObj = persistence.findById(expected.getId(), EmptyGenericModel.class);
+      EmptyGenericModel testObj = persistence.resolveById(expected.getId(), EmptyGenericModel.class);
 
       assertNotNull(testObj);
       assertEquals(expected.getId(), testObj.getId());
@@ -84,7 +85,7 @@ public class PersistenceTest {
 
       persistence.save(expected);
 
-      User testObj = persistence.findById(expected.getId(), User.class);
+      User testObj = persistence.resolveById(expected.getId(), User.class);
 
       assertNotNull(testObj);
       assertEquals(expected.getEmail(), testObj.getEmail());
@@ -98,7 +99,7 @@ public class PersistenceTest {
 
       persistence.save(expected);
 
-      SecurityRole testObj = persistence.findById(expected.getId(), SecurityRole.class);
+      SecurityRole testObj = persistence.resolveById(expected.getId(), SecurityRole.class);
 
       assertNotNull(testObj);
       assertEquals(expected.getDescription(), testObj.getDescription());
@@ -112,7 +113,7 @@ public class PersistenceTest {
 
       persistence.save(expected);
 
-      Event testObj = persistence.findById(expected.getId(), Event.class);
+      Event testObj = persistence.resolveById(expected.getId(), Event.class);
 
       assertNotNull(testObj);
       assertEquals(expected.getId(), testObj.getId());
@@ -130,11 +131,12 @@ public class PersistenceTest {
 
       persistence.save(expected);
 
-      OrganisationUnit testObj = persistence.findById(expected.getId(), OrganisationUnit.class);
-      Room testRoom = persistence.findById(room.getId(), Room.class);
+      OrganisationUnit testObj = persistence.resolveById(expected.getId(), OrganisationUnit.class);
 
       assertNotNull(testObj);
       assertEquals(expected.getId(), testObj.getId());
+      assertEquals("Channel Label", expected.getRooms().first().getChannel().getLabel());
+      assertEquals(expected.getRooms().first().getChannel().getLabel(), testObj.getRooms().first().getChannel().getLabel());
     }
   }
 }

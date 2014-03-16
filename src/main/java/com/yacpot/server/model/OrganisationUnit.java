@@ -6,7 +6,7 @@ import java.util.*;
 
 public class OrganisationUnit extends AbstractGenericModel<OrganisationUnit> {
 
-  private final Set<Room> roomList;
+  private final SortedSet<Room> roomList;
   private final List<SecurityRole> roleList;
 
   public OrganisationUnit() {
@@ -20,8 +20,8 @@ public class OrganisationUnit extends AbstractGenericModel<OrganisationUnit> {
     return this;
   }
 
-  public Collection<Room> getRooms() {
-    return Collections.unmodifiableCollection(roomList);
+  public SortedSet<Room> getRooms() {
+    return Collections.unmodifiableSortedSet(roomList);
   }
 
   public OrganisationUnit addRole(SecurityRole role) {

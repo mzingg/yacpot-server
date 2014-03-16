@@ -1,5 +1,6 @@
 package com.yacpot.server.model;
 
+import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
@@ -17,9 +18,9 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
   private transient int orderWeight;
 
   public AbstractGenericModel() {
-    this.id = UUID.randomUUID().toString();
+    this.id = ObjectId.get().toString();
     this.orderWeight = 0;
-    this.label = id.toString();
+    this.label = id;
     timestamp = LocalDateTime.now();
   }
 

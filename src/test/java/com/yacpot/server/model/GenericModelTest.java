@@ -1,6 +1,7 @@
 package com.yacpot.server.model;
 
 import com.yacpot.server.model.sort.GenericModelComparator;
+import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
@@ -24,11 +25,11 @@ public class GenericModelTest {
 
   @Test
   public void testEqualityOnlyWithId() {
-    String aUUID = UUID.randomUUID().toString();
+    ObjectId aUUID = ObjectId.get();
     GenericModel aIdentityObject = new AbstractGenericModel() {
-    }.setId(aUUID).setLabel("Label is ignored");
+    }.setId(aUUID.toString()).setLabel("Label is ignored");
     GenericModel anotherIdentityObject = new AbstractGenericModel() {
-    }.setId(aUUID).setOrderWeight(10);
+    }.setId(aUUID.toString()).setOrderWeight(10);
 
     assertEquals(aIdentityObject, anotherIdentityObject);
     assertEquals(aIdentityObject.hashCode(), anotherIdentityObject.hashCode());
