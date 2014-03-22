@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
 public @interface ResourceMapping {
   String pattern();
 
+  boolean anonymousAllowed() default false;
+
   String[] requireRoles() default StringUtils.EMPTY;
 
   Operation[] supportsOperations() default Operation.READ;

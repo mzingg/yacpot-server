@@ -5,11 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 public abstract class AbstractGenericModel<T extends GenericModel> implements Serializable, GenericModel<T> {
 
-  private String id;
+  private GenericModelIdentifier id;
 
   private LocalDateTime timestamp;
 
@@ -18,20 +17,20 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
   private transient int orderWeight;
 
   public AbstractGenericModel() {
-    this.id = ObjectId.get().toString();
+    this.id = new GenericModelIdentifier(ObjectId.get().toString());
     this.orderWeight = 0;
-    this.label = id;
+    this.label = this.id.toString();
     timestamp = LocalDateTime.now();
   }
 
   @Override
-  public String getId() {
+  public GenericModelIdentifier getId() {
     return id;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T setId(@NotNull String newId) {
+  public T setId(@NotNull GenericModelIdentifier newId) {
     this.id = newId;
     return (T) this;
   }

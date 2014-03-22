@@ -1,5 +1,6 @@
 package com.yacpot.server.rest;
 
+import com.yacpot.server.auth.AuthenticationSession;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -14,11 +15,14 @@ public class Task<T extends Task> {
 
   private List<String> parameters;
 
+  private AuthenticationSession authenticationSession;
+
   public Task(String path) {
     this.path = path;
     this.operation = Operation.READ;
     this.parameters = new ArrayList<>();
     this.attributes = new HashMap<>();
+    this.authenticationSession = null;
   }
 
   protected Task(String path, Map<String, Object> attributes) {
@@ -78,5 +82,18 @@ public class Task<T extends Task> {
     }
 
     return result;
+  }
+
+  public boolean isAuthenticated() {
+    return authenticationSession != null && authenticationSession.isValid();
+  }
+
+  public AuthenticationSession getAuthenticationSession() {
+    return authenticationSession;
+  }
+
+  public Task<T> setAuthenticationSession(AuthenticationSession authenticationSession) {
+    this.authenticationSession = authenticationSession;
+    return this;
   }
 }

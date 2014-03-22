@@ -7,20 +7,32 @@ import org.joda.time.LocalDateTime;
 
 public class DateIntervalIncarnation extends AbstractGenericModel<DateIntervalIncarnation> implements EventIncarnation {
 
-  private final LocalDateTime startDate;
-  private final LocalDateTime endDate;
+  private LocalDateTime startDate;
+  private LocalDateTime endDate;
 
-  public DateIntervalIncarnation(LocalDateTime startDate, LocalDateTime endDate) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+  public DateIntervalIncarnation() {
+    super();
+    this.startDate = LocalDateTime.now();
+    this.endDate = LocalDateTime.now();
   }
 
   public LocalDateTime getStartDate() {
     return startDate;
   }
 
+  public DateIntervalIncarnation setStartDate(LocalDateTime startDate) {
+    this.startDate = startDate;
+    return this;
+  }
+
   public LocalDateTime getEndDate() {
     return endDate;
+  }
+
+
+  public DateIntervalIncarnation setEndDate(LocalDateTime endDate) {
+    this.endDate = endDate;
+    return this;
   }
 
   @Override

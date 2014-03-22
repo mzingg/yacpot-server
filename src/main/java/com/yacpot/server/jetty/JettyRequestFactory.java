@@ -1,6 +1,7 @@
 package com.yacpot.server.jetty;
 
 import com.yacpot.server.auth.AuthenticationException;
+import com.yacpot.server.auth.AuthenticationSession;
 import com.yacpot.server.auth.AuthenticationSessionFactory;
 import com.yacpot.server.rest.Operation;
 import com.yacpot.server.rest.TaskException;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JettyRequestFactory implements TaskFactory<JettyRequestTask, Request>, AuthenticationSessionFactory<JettyAuthenticationSession, Request> {
+public class JettyRequestFactory implements TaskFactory<JettyRequestTask, Request>, AuthenticationSessionFactory<Request> {
 
   private final static Operation DEFAULT_OPERATION = Operation.READ;
   private final static Map<String, Operation> HTTP_TO_OPERATION_MAP = new HashMap<>();
@@ -50,9 +51,9 @@ public class JettyRequestFactory implements TaskFactory<JettyRequestTask, Reques
   }
 
   @Override
-  public JettyAuthenticationSession getSession(@NotNull Request jettyRequest) throws AuthenticationException {
+  public AuthenticationSession getSession(@NotNull Request jettyRequest) throws AuthenticationException {
     jettyRequest.getRemoteUser();
 
-    return new JettyAuthenticationSession();
+    return new AuthenticationSession();
   }
 }

@@ -25,11 +25,11 @@ public class GenericModelTest {
 
   @Test
   public void testEqualityOnlyWithId() {
-    ObjectId aUUID = ObjectId.get();
+    GenericModelIdentifier anId = new GenericModelIdentifier(ObjectId.get().toString());
     GenericModel aIdentityObject = new AbstractGenericModel() {
-    }.setId(aUUID.toString()).setLabel("Label is ignored");
+    }.setId(anId).setLabel("Label is ignored");
     GenericModel anotherIdentityObject = new AbstractGenericModel() {
-    }.setId(aUUID.toString()).setOrderWeight(10);
+    }.setId(anId).setOrderWeight(10);
 
     assertEquals(aIdentityObject, anotherIdentityObject);
     assertEquals(aIdentityObject.hashCode(), anotherIdentityObject.hashCode());

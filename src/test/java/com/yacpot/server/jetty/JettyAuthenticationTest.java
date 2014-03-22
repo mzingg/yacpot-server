@@ -7,13 +7,9 @@ import org.junit.Test;
 import static com.yacpot.server.tests.jetty.JettyTestUtils.aRequest;
 
 public class JettyAuthenticationTest {
-
   @Test
-  public void testNoAuthReturnsAnonymousSession() throws Exception {
+  public void testName() throws Exception {
 
-    JettyRequestFactory factory = new JettyRequestFactory();
-    JettyAuthenticationSession session = factory.getSession(aRequest("GET", "/a/getPath"));
 
-    Assert.assertEquals(User.ANONYMOUS, session.getUser());
   }
 }

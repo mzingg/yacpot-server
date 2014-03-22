@@ -27,7 +27,7 @@ public class PersistenceTest {
   @Test
   public void testNotFoundReturnNull() throws Exception {
     try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      EmptyGenericModel testObj = persistence.resolveById(ObjectId.get().toString(), EmptyGenericModel.class);
+      EmptyGenericModel testObj = persistence.resolveById(new GenericModelIdentifier(ObjectId.get().toString()), EmptyGenericModel.class);
 
       assertNull(testObj);
     }
@@ -36,7 +36,7 @@ public class PersistenceTest {
   @Test
   public void testResolveNotFoundReturnNull() throws Exception {
     try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      GenericModel<?> testObj = persistence.resolveById(ObjectId.get().toString());
+      GenericModel<?> testObj = persistence.resolveById(new GenericModelIdentifier(ObjectId.get().toString()));
 
       assertNull(testObj);
     }
@@ -124,7 +124,7 @@ public class PersistenceTest {
   public void testSaveAndLoadOu() throws Exception {
     try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
       Event event = new Event();
-      event.getTimeline().addIncarnation(new SingleDateIncarnation(LocalDateTime.now().plusDays(2)));
+      event.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(LocalDateTime.now().plusDays(2)));
       Room room = new Room().addEvent(event).addEvent(new Event());
       room.getChannel().setLabel("Channel Label");
       OrganisationUnit expected = new OrganisationUnit().addRoom(room).addRole(new SecurityRole());
@@ -135,7 +135,7 @@ public class PersistenceTest {
 
       assertNotNull(testObj);
       assertEquals(expected.getId(), testObj.getId());
-      assertEquals("Channel Label", expected.getRooms().first().getChannel().getLabel());
+      assertEquals("Channel Label", testObj.getRooms().first().getChannel().getLabel());
       assertEquals(expected.getRooms().first().getChannel().getLabel(), testObj.getRooms().first().getChannel().getLabel());
     }
   }

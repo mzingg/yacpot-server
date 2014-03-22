@@ -6,10 +6,10 @@ import org.joda.time.LocalDateTime;
 import java.util.UUID;
 
 public interface GenericModel<T extends GenericModel> {
-  String getId();
+  GenericModelIdentifier getId();
 
   @SuppressWarnings("unchecked")
-  T setId(@NotNull String newId);
+  T setId(@NotNull GenericModelIdentifier newId);
 
   String getLabel();
 

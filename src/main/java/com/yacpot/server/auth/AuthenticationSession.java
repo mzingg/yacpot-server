@@ -1,23 +1,98 @@
 package com.yacpot.server.auth;
 
+import com.yacpot.server.model.AbstractGenericModel;
 import com.yacpot.server.model.OrganisationUnit;
 import com.yacpot.server.model.SecurityRole;
 import com.yacpot.server.model.User;
 import org.joda.time.LocalDateTime;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
-public interface AuthenticationSession extends Serializable {
+public class AuthenticationSession extends AbstractGenericModel<AuthenticationSession> {
 
-  UUID getSessionId();
+  private LocalDateTime expiration;
 
-  LocalDateTime getExpiration();
+  private User user;
 
-  User getUser();
+  private List<SecurityRole> systemRoles;
 
-  Collection<SecurityRole> getSystemRoles();
+  private Map<OrganisationUnit, List<SecurityRole>> organisationUnitsRoles;
 
-  Collection<SecurityRole> getRolesInOrganisationUnit(OrganisationUnit ou);
+  private List<String> testList;
+
+  public AuthenticationSession() {
+    super();
+    this.user = User.ANONYMOUS;
+    this.expiration = LocalDateTime.now().plusYears(10);
+    this.systemRoles = new ArrayList<>();
+    this.organisationUnitsRoles = new HashMap<>();
+    this.testList = new ArrayList<>();
+    testList.add("Test 1");
+    testList.add("Test 4");
+    testList.add("Test 3");
+    testList.add("Test 2");
+  }
+
+  public LocalDateTime getExpiration() {
+    return expiration;
+  }
+
+  public AuthenticationSession setExpiration(LocalDateTime expiration) {
+    this.expiration = expiration;
+    return this;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public AuthenticationSession setUser(User user) {
+    this.user = user;
+    return this;
+  }
+
+  public List<SecurityRole> getSystemRoles() {
+    return Collections.unmodifiableList(systemRoles);
+  }
+
+  public void setSystemRoles(List<SecurityRole> systemRoles) {
+    this.systemRoles = systemRoles;
+  }
+
+  public AuthenticationSession addSystemRole(SecurityRole role) {
+    this.systemRoles.add(role);
+    return this;
+  }
+
+  public Map<OrganisationUnit, List<SecurityRole>> getOrganisationUnitsRoles() {
+    Map<OrganisationUnit, List<SecurityRole>> result = new HashMap<>();
+    for (Map.Entry<OrganisationUnit, List<SecurityRole>> entry : organisationUnitsRoles.entrySet()) {
+      result.put(entry.getKey(), Collections.unmodifiableList(entry.getValue()));
+    }
+    return Collections.unmodifiableMap(result);
+  }
+
+  public void setOrganisationUnitsRoles(Map<OrganisationUnit, List<SecurityRole>> organisationUnitsRoles) {
+    this.organisationUnitsRoles = organisationUnitsRoles;
+  }
+
+  public void addRolesInOrganisationUnit(OrganisationUnit ou, SecurityRole role) {
+    if (!organisationUnitsRoles.containsKey(ou)) {
+      organisationUnitsRoles.put(ou, new ArrayList<>());
+    }
+    organisationUnitsRoles.get(ou).add(role);
+  }
+
+  public List<String> getTestList() {
+    return Collections.unmodifiableList(testList);
+  }
+
+  public void setTestList(List<String> testList) {
+    this.testList = testList;
+  }
+
+  public boolean isValid() {
+    return user == User.ANONYMOUS || expiration.isAfter(LocalDateTime.now());
+  }
+
 }

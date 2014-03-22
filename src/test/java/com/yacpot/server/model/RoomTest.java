@@ -28,13 +28,13 @@ public class RoomTest {
   @Test
   public void testEventsSortedByIncarnationSortDate() {
     Event first = new Event().setLabel("Event Z");
-    first.getTimeline().addIncarnation(new SingleDateIncarnation(new LocalDateTime(2014, 1, 10, 10, 0)));
+    first.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(new LocalDateTime(2014, 1, 10, 10, 0)));
 
     Event second = new Event().setLabel("Event A");
-    second.getTimeline().addIncarnation(new SingleDateIncarnation(new LocalDateTime(2014, 3, 10, 10, 0)));
+    second.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(new LocalDateTime(2014, 3, 10, 10, 0)));
 
     Event third = new Event().setLabel("Event D");
-    third.getTimeline().addIncarnation(new SingleDateIncarnation(new LocalDateTime(2014, 2, 10, 10, 0)));
+    third.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(new LocalDateTime(2014, 2, 10, 10, 0)));
 
     LocalDateTime anchor = new LocalDateTime(2014, 2, 10, 10, 0);
 
@@ -68,13 +68,13 @@ public class RoomTest {
   @Test
   public void testCalendarList() {
     Event first = new Event().setLabel("Event Z");
-    first.getTimeline().addIncarnation(new SingleDateIncarnation(new LocalDateTime(2014, 1, 10, 10, 0)));
+    first.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(new LocalDateTime(2014, 1, 10, 10, 0)));
 
     Event second = new Event().setLabel("Event A");
-    second.getTimeline().addIncarnation(new SingleDateIncarnation(new LocalDateTime(2014, 3, 10, 10, 0)));
+    second.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(new LocalDateTime(2014, 3, 10, 10, 0)));
 
     Event third = new Event().setLabel("Event D");
-    third.getTimeline().addIncarnation(new SingleDateIncarnation(new LocalDateTime(2014, 2, 9, 10, 0)));
+    third.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(new LocalDateTime(2014, 2, 9, 10, 0)));
 
     Room room = new Room().addEvent(first).addEvent(second).addEvent(third);
 

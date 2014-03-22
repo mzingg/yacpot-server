@@ -9,12 +9,18 @@ public class SingleDateIncarnation extends AbstractGenericModel<SingleDateIncarn
 
   private LocalDateTime date;
 
-  public SingleDateIncarnation(LocalDateTime date) {
-    this.date = date;
+  public SingleDateIncarnation() {
+    super();
+    this.date = LocalDateTime.now();
   }
 
   public LocalDateTime getDate() {
     return date;
+  }
+
+  public SingleDateIncarnation setDate(LocalDateTime date) {
+    this.date = date;
+    return this;
   }
 
   @Override
