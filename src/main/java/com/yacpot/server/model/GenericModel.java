@@ -3,8 +3,6 @@ package com.yacpot.server.model;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
-import java.util.UUID;
-
 public interface GenericModel<T extends GenericModel> {
   GenericModelIdentifier getId();
 

@@ -1,27 +1,38 @@
 package com.yacpot.server.persistence;
 
 import com.mongodb.MongoClient;
+import com.yacpot.server.auth.AuthenticationSession;
 import com.yacpot.server.model.*;
 import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeNotNull;
 
 public class PersistenceTest {
 
   private final static String TEST_DATABASE_NAME = "test";
 
-  private MongoClient client;
-
-  public PersistenceTest() throws Exception {
-    this.client = new MongoClient();
-  }
+  private static MongoClient client;
 
   @BeforeClass
   public static void initialize() throws Exception {
-    new MongoClient().dropDatabase(TEST_DATABASE_NAME);
+    try {
+      client = new MongoClient();
+      client.getDB("admin").command("ping").throwOnError();
+
+      client.dropDatabase(TEST_DATABASE_NAME);
+    } catch (Exception ex) {
+      client = null;
+    }
+  }
+
+  @Before
+  public void setUp() throws Exception {
+    assumeNotNull(client);
   }
 
   @Test
@@ -139,4 +150,37 @@ public class PersistenceTest {
       assertEquals(expected.getRooms().first().getChannel().getLabel(), testObj.getRooms().first().getChannel().getLabel());
     }
   }
+
+  @Test
+  public void testAuthenticationSession() throws Exception {
+    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+      SecurityRole systemRole = new SecurityRole().setLabel("System Role");
+
+      SecurityRole roleA = new SecurityRole().setLabel("Role A");
+      SecurityRole roleB = new SecurityRole().setLabel("Role B");
+      SecurityRole roleC = new SecurityRole().setLabel("Role C");
+
+      OrganisationUnit ou1 = new OrganisationUnit().setLabel("Organisation 1");
+      ou1.addRole(roleA).addRole(roleC);
+
+      OrganisationUnit ou2 = new OrganisationUnit().setLabel("Organisation 2");
+      ou2.addRole(roleB);
+
+      persistence.save(systemRole);
+      persistence.save(ou1);
+      persistence.save(ou2);
+
+      AuthenticationSession session = new AuthenticationSession().addSystemRole(systemRole).setUser(User.ANONYMOUS);
+      session.addRolesInOrganisationUnit(ou1, roleA);
+      session.addRolesInOrganisationUnit(ou2, roleB);
+
+      persistence.save(session);
+
+      AuthenticationSession testObj = persistence.resolveById(session.getId(), AuthenticationSession.class);
+
+      assertNotNull(testObj);
+      assertEquals("Role A", testObj.getOrganisationUnitsRoles().get(ou1).get(0).getLabel());
+    }
+  }
+
 }

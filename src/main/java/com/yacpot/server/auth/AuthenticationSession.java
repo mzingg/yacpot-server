@@ -18,19 +18,12 @@ public class AuthenticationSession extends AbstractGenericModel<AuthenticationSe
 
   private Map<OrganisationUnit, List<SecurityRole>> organisationUnitsRoles;
 
-  private List<String> testList;
-
   public AuthenticationSession() {
     super();
     this.user = User.ANONYMOUS;
     this.expiration = LocalDateTime.now().plusYears(10);
     this.systemRoles = new ArrayList<>();
     this.organisationUnitsRoles = new HashMap<>();
-    this.testList = new ArrayList<>();
-    testList.add("Test 1");
-    testList.add("Test 4");
-    testList.add("Test 3");
-    testList.add("Test 2");
   }
 
   public LocalDateTime getExpiration() {
@@ -81,14 +74,6 @@ public class AuthenticationSession extends AbstractGenericModel<AuthenticationSe
       organisationUnitsRoles.put(ou, new ArrayList<>());
     }
     organisationUnitsRoles.get(ou).add(role);
-  }
-
-  public List<String> getTestList() {
-    return Collections.unmodifiableList(testList);
-  }
-
-  public void setTestList(List<String> testList) {
-    this.testList = testList;
   }
 
   public boolean isValid() {

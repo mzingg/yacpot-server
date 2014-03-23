@@ -4,6 +4,7 @@ import com.mongodb.*;
 import com.yacpot.server.model.GenericModel;
 import com.yacpot.server.model.GenericModelIdentifier;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
 import java.io.Closeable;
@@ -17,6 +18,10 @@ public class Persistence implements Closeable {
   private final static String ID_FIELD_NAME = "id";
   private final static String ID_PROPERTY_NAME = "_id";
   private final static String CLASS_FIELD_NAME = "class";
+
+  private static final String MAP_ENTRY_INDICATOR = "yacpot_map";
+  private static final String MAP_KEY_FIELD = "key";
+  private static final String MAP_VALUE_FIELD = "value";
 
   private final static Map<Class<?>, Class<?>> boxedTypes = new HashMap<>();
 
@@ -32,10 +37,6 @@ public class Persistence implements Closeable {
   }
 
   private DB database;
-
-  public DB getDatabase() {
-    return database;
-  }
 
   public Persistence(MongoClient mongo, String databaseName) {
     this.database = mongo.getDB(databaseName);
@@ -120,10 +121,11 @@ public class Persistence implements Closeable {
         Class<?> targetType = getBoxedClass(signature[0]);
         Object setterValue = reverseMapValue(mongoObj.get(propertyName), targetType);
         if (setterValue != null) {
-          if (GenericModel.class.isAssignableFrom(targetType) && setterValue instanceof Collection<?>) {
+          // special support of addX methods for collections
+          if (setter.getName().startsWith("add") && setterValue instanceof Collection<?>) {
             for (Object entry : (Collection<?>) setterValue) {
-              if (entry instanceof DBRef) {
-                setter.invoke(model, resolveByReference((DBRef) entry));
+              if (targetType.isAssignableFrom(entry.getClass())) {
+                setter.invoke(model, entry);
               }
             }
           } else if (targetType.isAssignableFrom(setterValue.getClass())) {
@@ -173,9 +175,9 @@ public class Persistence implements Closeable {
       List<BasicDBObject> entryList = new ArrayList<>();
       for (Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
         BasicDBObject entryObject = new BasicDBObject();
-        entryObject.put("isMapEntry", true);
-        entryObject.put("key", mapAndPersistValue(entry.getKey()));
-        entryObject.put("value", mapAndPersistValue(entry.getValue()));
+        entryObject.put(MAP_ENTRY_INDICATOR, true);
+        entryObject.put(MAP_KEY_FIELD, mapAndPersistValue(entry.getKey()));
+        entryObject.put(MAP_VALUE_FIELD, mapAndPersistValue(entry.getValue()));
         entryList.add(entryObject);
       }
       return entryList;
@@ -191,17 +193,52 @@ public class Persistence implements Closeable {
   }
 
   protected Object reverseMapValue(Object mongoValue, Class<?> targetType) throws PersistenceException {
-    if (GenericModel.class.isAssignableFrom(targetType) && mongoValue instanceof DBRef) {
+    if ((targetType == null || GenericModel.class.isAssignableFrom(targetType)) && mongoValue instanceof DBRef) {
       return resolveByReference((DBRef) mongoValue);
     } else if (mongoValue instanceof Collection) {
-      int i = 0;
-    } else if (LocalDateTime.class == targetType && mongoValue instanceof Long) {
+
+      // Return empty collection when it is passed in
+      Collection<?> collection = (Collection<?>) mongoValue;
+      if (collection.isEmpty()) {
+        return collection;
+      }
+
+      // read first element and decide whether this is a map or a collection
+      Iterator<?> collectionIterator = collection.iterator();
+      Object firstElement = collectionIterator.next();
+
+      if (firstElement instanceof DBObject && ((DBObject) firstElement).containsField(MAP_ENTRY_INDICATOR)) {
+
+        Map<Object, Object> result = new HashMap<>();
+        retrieveAndPutMapEntry((DBObject) firstElement, result);
+        while (collectionIterator.hasNext()) {
+          retrieveAndPutMapEntry((DBObject) collectionIterator.next(), result);
+        }
+        return result;
+
+      } else {
+        Collection<Object> result = new ArrayList<>();
+        result.add(reverseMapValue(firstElement, null));
+        while (collectionIterator.hasNext()) {
+          result.add(reverseMapValue(collectionIterator.next(), null));
+        }
+        return result;
+      }
+
+    } else if ((targetType == null || LocalDateTime.class == targetType) && mongoValue instanceof Long) {
       return new LocalDateTime(((Long) mongoValue).longValue());
-    } else if (GenericModelIdentifier.class.isAssignableFrom(targetType) && mongoValue instanceof ObjectId) {
+    } else if ((targetType == null || GenericModelIdentifier.class.isAssignableFrom(targetType)) && mongoValue instanceof ObjectId) {
       return new GenericModelIdentifier(mongoValue.toString());
     }
 
     return mongoValue;
+  }
+
+  private void retrieveAndPutMapEntry(@NotNull DBObject mongoObject, @NotNull Map<Object, Object> targetMap) throws PersistenceException {
+    Object key = reverseMapValue(mongoObject.get(MAP_KEY_FIELD), null);
+    Object value = reverseMapValue(mongoObject.get(MAP_VALUE_FIELD), null);
+
+    targetMap.put(key, value);
   }
 
   protected List<Method> getMethodsStartingWith(Class<?> modelClass, String... prefixes) {
