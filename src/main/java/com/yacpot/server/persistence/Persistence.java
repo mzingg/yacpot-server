@@ -119,7 +119,7 @@ public class Persistence implements Closeable {
       try {
         Class<?>[] signature = setter.getParameterTypes();
         Class<?> targetType = getBoxedClass(signature[0]);
-        Object setterValue = reverseMapValue(mongoObj.get(propertyName), targetType);
+        Object setterValue = castPrimitiveTypes(reverseMapValue(mongoObj.get(propertyName), targetType), targetType);
         if (setterValue != null) {
           // special support of addX methods for collections
           if (setter.getName().startsWith("add") && setterValue instanceof Collection<?>) {
@@ -136,6 +136,23 @@ public class Persistence implements Closeable {
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new PersistenceException(e.getLocalizedMessage(), e);
       }
+    }
+  }
+
+  private Object castPrimitiveTypes(Object value, Class<?> targetType) {
+    // Mongo returns always Integer for numbers (except Long)
+    if (value instanceof Integer && Byte.class.equals(targetType)) {
+      return Byte.valueOf(((Integer)value).byteValue());
+    } else if (value instanceof Integer && Short.class.equals(targetType)) {
+      return Short.valueOf(((Integer)value).shortValue());
+    // Mongo returns always Double for fractional numbers
+    } else if (value instanceof Double && Float.class.equals(targetType)) {
+      return Float.valueOf(((Double)value).floatValue());
+    // Mongo returns Strings for Characters - chars are always length==1
+    } else if (value instanceof String && Character.class.equals(targetType)) {
+      return ((String)value).charAt(0);
+    } else {
+      return value;
     }
   }
 
