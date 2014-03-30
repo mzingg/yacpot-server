@@ -64,7 +64,7 @@ public class Persistence implements Closeable {
 
   protected GenericModel<?> findById(ObjectId id, String collectionName, Class<?> desiredObjectType) throws PersistenceException {
     if (desiredObjectType != null && !GenericModel.class.isAssignableFrom(desiredObjectType)) {
-      throw new IllegalArgumentException("Class must implement from GenricModel");
+      throw new IllegalArgumentException("Class must implement GenricModel");
     }
 
     String effectiveCollectionName = desiredObjectType != null ? getCollectionName(desiredObjectType) : collectionName;
@@ -142,15 +142,15 @@ public class Persistence implements Closeable {
   private Object castPrimitiveTypes(Object value, Class<?> targetType) {
     // Mongo returns always Integer for numbers (except Long)
     if (value instanceof Integer && Byte.class.equals(targetType)) {
-      return Byte.valueOf(((Integer)value).byteValue());
+      return Byte.valueOf(((Integer) value).byteValue());
     } else if (value instanceof Integer && Short.class.equals(targetType)) {
-      return Short.valueOf(((Integer)value).shortValue());
-    // Mongo returns always Double for fractional numbers
+      return Short.valueOf(((Integer) value).shortValue());
+      // Mongo returns always Double for fractional numbers
     } else if (value instanceof Double && Float.class.equals(targetType)) {
-      return Float.valueOf(((Double)value).floatValue());
-    // Mongo returns Strings for Characters - chars are always length==1
+      return Float.valueOf(((Double) value).floatValue());
+      // Mongo returns Strings for Characters - chars are always length==1
     } else if (value instanceof String && Character.class.equals(targetType)) {
-      return ((String)value).charAt(0);
+      return ((String) value).charAt(0);
     } else {
       return value;
     }
