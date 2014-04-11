@@ -4,8 +4,18 @@ import com.yacpot.server.model.AbstractGenericModel;
 import com.yacpot.server.model.OrganisationUnit;
 import com.yacpot.server.model.SecurityRole;
 import com.yacpot.server.model.User;
+import com.yacpot.server.persistence.PersistenceException;
+import com.yacpot.server.persistence.UserPersistence;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class AuthenticationSession extends AbstractGenericModel<AuthenticationSession> {
@@ -24,6 +34,37 @@ public class AuthenticationSession extends AbstractGenericModel<AuthenticationSe
     this.expiration = LocalDateTime.now().plusYears(10);
     this.systemRoles = new ArrayList<>();
     this.organisationUnitsRoles = new HashMap<>();
+  }
+
+  public void authenticate(UserPersistence userPersistence, String userId, long timestamp, String authenticationCode) throws AuthenticationException {
+    if (StringUtils.isBlank(userId) || timestamp <= 0 || StringUtils.isBlank(authenticationCode)) {
+      throw new AuthenticationException("Invalid authentication credentials.");
+    }
+
+    try {
+      User authenticatedUser = userPersistence.findByEmail(userId);
+      if (authenticatedUser == null) {
+        throw new AuthenticationException("Invalid authentication credentials.");
+      }
+
+      String authCodeValidationInput = userId + timestamp;
+      byte[] authCodeValidation = createHmac(authenticatedUser.userKeyBytes(), authCodeValidationInput);
+      byte[] authCodeProvided = Hex.decodeHex(authenticationCode.toCharArray());
+
+      if (!Arrays.equals(authCodeProvided, authCodeValidation)) {
+        throw new AuthenticationException("Invalid authentication credentials.");
+      }
+
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | DecoderException | PersistenceException e) {
+      throw new AuthenticationException("Invalid authentication credentials.");
+    }
+  }
+
+  public byte[] createHmac(byte[] key, String hashPayload) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
+    final Mac shaHmac = Mac.getInstance("HmacSHA512");
+    shaHmac.init(new SecretKeySpec(key, "HmacSHA512"));
+
+    return shaHmac.doFinal(hashPayload.getBytes());
   }
 
   public LocalDateTime getExpiration() {

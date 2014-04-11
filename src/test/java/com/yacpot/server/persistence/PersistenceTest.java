@@ -330,7 +330,7 @@ public class PersistenceTest {
 
   @Test
   public void testAuthenticationSession() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
       SecurityRole systemRole = new SecurityRole().setLabel("System Role");
 
       SecurityRole roleA = new SecurityRole().setLabel("Role A");
@@ -347,7 +347,7 @@ public class PersistenceTest {
       persistence.save(ou1);
       persistence.save(ou2);
 
-      AuthenticationSession session = new AuthenticationSession().addSystemRole(systemRole).setUser(User.ANONYMOUS);
+      AuthenticationSession session = new AuthenticationSession().addSystemRole(systemRole).setUser(new User().setEmail("some@somwehere.com"));
       session.addRolesInOrganisationUnit(ou1, roleA);
       session.addRolesInOrganisationUnit(ou2, roleB);
 

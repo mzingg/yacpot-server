@@ -42,6 +42,10 @@ public class Persistence implements Closeable {
     this.database = mongo.getDB(databaseName);
   }
 
+  protected DB getDatabase() {
+    return database;
+  }
+
   public GenericModel<?> resolveByReference(DBRef ref) throws PersistenceException {
     return findById((ObjectId) ref.getId(), ref.getRef(), null);
   }
@@ -106,11 +110,11 @@ public class Persistence implements Closeable {
     mapModelTo(model, mongoObj);
 
     collection.save(mongoObj);
-    ensureIndex(collection);
+    ensureIndex(model.getClass(), collection);
   }
 
-  protected void ensureIndex(DBCollection collection) {
-    //collection.ensureIndex(new BasicDBObject(ID_FIELD_NAME, 1), new BasicDBObject("unique", true));
+  protected void ensureIndex(Class<?> targetClass, DBCollection collection) {
+    // Nothing here since we only support searches over _id (which is indexed by default) in this class - overwrite in subclasses
   }
 
   protected void fillModelWith(Object model, DBObject mongoObj) throws PersistenceException {
@@ -142,12 +146,12 @@ public class Persistence implements Closeable {
   private Object castPrimitiveTypes(Object value, Class<?> targetType) {
     // Mongo returns always Integer for numbers (except Long)
     if (value instanceof Integer && Byte.class.equals(targetType)) {
-      return Byte.valueOf(((Integer) value).byteValue());
+      return ((Integer) value).byteValue();
     } else if (value instanceof Integer && Short.class.equals(targetType)) {
-      return Short.valueOf(((Integer) value).shortValue());
+      return ((Integer) value).shortValue();
       // Mongo returns always Double for fractional numbers
     } else if (value instanceof Double && Float.class.equals(targetType)) {
-      return Float.valueOf(((Double) value).floatValue());
+      return ((Double) value).floatValue();
       // Mongo returns Strings for Characters - chars are always length==1
     } else if (value instanceof String && Character.class.equals(targetType)) {
       return ((String) value).charAt(0);
