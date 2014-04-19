@@ -26,6 +26,12 @@ public class AuthenticationSessionTest {
       client.getDB("admin").command("ping").throwOnError();
 
       client.dropDatabase(TEST_DATABASE_NAME);
+
+      try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+        User testuser = new User().setEmail("test@test.local").changePassword("aPassword", null).setLabel("Test User");
+        persistence.save(testuser);
+      }
+
     } catch (Exception ex) {
       client = null;
     }
@@ -39,13 +45,13 @@ public class AuthenticationSessionTest {
   @Test(expected = AuthenticationException.class)
   public void testAuthenticationThrowsExceptionWithInvalidParameters1() throws Exception {
     AuthenticationSession testObj = new AuthenticationSession();
-    testObj.authenticate(null, null, -100, null);
+    testObj.authenticate(null, null, null, null);
   }
 
   @Test(expected = AuthenticationException.class)
   public void testAuthenticationThrowsExceptionWithInvalidParameters2() throws Exception {
     AuthenticationSession testObj = new AuthenticationSession();
-    testObj.authenticate(null, "some@email.org", 0, null);
+    testObj.authenticate(null, "some@email.org", null, null);
   }
 
   @Test(expected = AuthenticationException.class)
@@ -59,10 +65,26 @@ public class AuthenticationSessionTest {
     try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
       AuthenticationSession testObj = new AuthenticationSession();
 
-      User testuser = new User().setEmail("mzingg@gmx.net").changePassword("761109", null).setLabel("Markus Zingg");
-      persistence.save(testuser);
+      testObj.authenticate(persistence, "test@test.local", 1397653858L, "ff5754533e3914301ba8d1a9c650c762ebb599366540287654763ab2aaa6129d");
+      assertEquals("test@test.local", testObj.getUser().getEmail());
+    }
+  }
 
-      testObj.authenticate(persistence, "mzingg@gmx.net", 1397222674, "adc07e23903618b1c9ce2853cd10c9f2d88596dcdc285cf417253f7161262aa5fb3c1b7c889ac6eada2dc6794122d0d72f2ca1a9a46d657c39a386c996ca79c3");
+  @Test(expected = AuthenticationException.class)
+  public void testAuthenticationFailsWithWrongTimestamp() throws Exception {
+    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+      AuthenticationSession testObj = new AuthenticationSession();
+
+      testObj.authenticate(persistence, "test@test.local", 1397653859L, "ff5754533e3914301ba8d1a9c650c762ebb599366540287654763ab2aaa6129d");
+    }
+  }
+
+  @Test(expected = AuthenticationException.class)
+  public void testAuthenticationFailsWithWrongCode() throws Exception {
+    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+      AuthenticationSession testObj = new AuthenticationSession();
+
+      testObj.authenticate(persistence, "test@test.local", 1397653858L, "ef5754533e3914301ba8d1a9c650c762ebb599366540287654763ab2aaa6129d");
     }
   }
 

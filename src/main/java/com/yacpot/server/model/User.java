@@ -82,8 +82,8 @@ public class User extends AbstractGenericModel<User> {
 
   private byte[] generateUserKey(String userPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
     String algorithm = "PBKDF2WithHmacSHA1";
-    int derivedKeyLength = 512;
-    int iterations = 1000;
+    int derivedKeyLength = 256;
+    int iterations = 500;
 
     byte[] salt = (getEmail() + userPassword).getBytes();
 

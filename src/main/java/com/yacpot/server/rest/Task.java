@@ -65,18 +65,18 @@ public class Task<T extends Task> {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T getAttribute(@NotNull String attributeName, @NotNull Class<T> desiredClass) {
+  public <E> E getAttribute(@NotNull String attributeName, @NotNull Class<E> desiredClass) {
     Object result = getAttribute(attributeName);
-    if (!desiredClass.isAssignableFrom(result.getClass())) {
+    if (result == null || !desiredClass.isAssignableFrom(result.getClass())) {
       return null;
     }
 
-    return (T) result;
+    return (E) result;
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T getAttribute(@NotNull String attributeName, T defaultValue) {
-    T result = (T) getAttribute(attributeName, defaultValue.getClass());
+  public <E> E getAttribute(@NotNull String attributeName, E defaultValue) {
+    E result = (E) getAttribute(attributeName, defaultValue.getClass());
     if (result == null) {
       return defaultValue;
     }
