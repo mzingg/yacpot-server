@@ -3,9 +3,6 @@ package com.yacpot.server.auth;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.yacpot.server.Application;
-import com.yacpot.server.model.User;
-import com.yacpot.server.persistence.PersistenceException;
-import com.yacpot.server.persistence.UserPersistence;
 import com.yacpot.server.rest.*;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ public class AuthenticationResource {
     this.application = application;
   }
 
-  @ResourceMapping(pattern = "^/login$", anonymousAllowed = true, supportsOperations = {Operation.CREATE, Operation.READ})
+  @ResourceMapping(pattern = "^/login$", anonymousAllowed = true, supportsOperations = Operation.CREATE)
   public TaskResult login(Task<?> task) {
     // email & passwort auslesen
     // passwort prüfen
