@@ -15,7 +15,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class AuthenticationSession extends AbstractGenericModel<AuthenticationSession> {
@@ -63,7 +62,7 @@ public class AuthenticationSession extends AbstractGenericModel<AuthenticationSe
 
       return new AuthenticationValidation(validationTimestamp, Hex.encodeHexString(authCodeValidation));
 
-    } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | DecoderException | PersistenceException e) {
+    } catch (NoSuchAlgorithmException | InvalidKeyException | DecoderException | PersistenceException e) {
       throw new AuthenticationException("Invalid authentication credentials.");
     }
   }
