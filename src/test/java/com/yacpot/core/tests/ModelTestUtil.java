@@ -1,6 +1,6 @@
-package com.yacpot.server.tests;
+package com.yacpot.core.tests;
 
-import com.yacpot.server.model.GenericModel;
+import com.yacpot.core.model.GenericModel;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

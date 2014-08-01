@@ -1,6 +1,6 @@
-package com.yacpot.server.model.sort;
+package com.yacpot.core.model.sort;
 
-import com.yacpot.server.model.GenericModel;
+import com.yacpot.core.model.GenericModel;
 
 import java.util.Comparator;
 
@@ -9,7 +9,7 @@ public abstract class AbstractModelComparator<T extends GenericModel, U extends 
   private OrderStrategy orderStrategy;
   private int sortDirectionMultiplier;
 
-  AbstractModelComparator() {
+  public AbstractModelComparator() {
     this.orderStrategy = OrderStrategy.NO_ORDER;
     this.sortDirectionMultiplier = 1;
   }

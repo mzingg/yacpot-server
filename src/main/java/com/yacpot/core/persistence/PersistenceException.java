@@ -1,4 +1,4 @@
-package com.yacpot.server.persistence;
+package com.yacpot.core.persistence;
 
 public class PersistenceException extends Exception {
   public PersistenceException(String message) {

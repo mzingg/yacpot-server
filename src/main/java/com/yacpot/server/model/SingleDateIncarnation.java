@@ -1,5 +1,6 @@
 package com.yacpot.server.model;
 
+import com.yacpot.core.model.AbstractGenericModel;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;

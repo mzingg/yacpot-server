@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
-import static com.yacpot.server.tests.ModelTestUtil.toJoinedString;
+import static com.yacpot.core.tests.ModelTestUtil.toJoinedString;
 import static org.junit.Assert.*;
 
 public class RoomTest {

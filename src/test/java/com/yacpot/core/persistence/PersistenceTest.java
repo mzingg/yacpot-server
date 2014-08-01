@@ -1,8 +1,8 @@
-package com.yacpot.server.persistence;
+package com.yacpot.core.persistence;
 
 import com.mongodb.MongoClient;
-import com.yacpot.server.auth.AuthenticationSession;
-import com.yacpot.server.model.*;
+import com.yacpot.core.model.GenericModel;
+import com.yacpot.core.model.GenericModelIdentifier;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;
@@ -17,9 +17,9 @@ import static org.junit.Assume.assumeNotNull;
 
 public class PersistenceTest {
 
-  private final static String TEST_DATABASE_NAME = "test";
+  protected final static String TEST_DATABASE_NAME = "test";
 
-  private static MongoClient client;
+  protected static MongoClient client;
 
   @BeforeClass
   public static void initialize() throws Exception {
@@ -244,7 +244,8 @@ public class PersistenceTest {
       TestSubModelOne expectedKey = new TestSubModelOne().setLabel("two");
 
       Map<TestSubModelOne, Collection<TestSubModelTwo>> oneToManyMap = new HashMap<>();
-      Collection<TestSubModelTwo> l1 = new ArrayList<>(); l1.add(new TestSubModelTwo().setLabel("valueOne"));
+      Collection<TestSubModelTwo> l1 = new ArrayList<>();
+      l1.add(new TestSubModelTwo().setLabel("valueOne"));
       oneToManyMap.put(new TestSubModelOne().setLabel("one"), l1);
       Collection<TestSubModelTwo> l2 = new ArrayList<>();
       l2.add(new TestSubModelTwo().setLabel("valueOne"));
@@ -263,100 +264,6 @@ public class PersistenceTest {
       Iterator<TestSubModelTwo> it = testObj.getModelKeyMapWithListValue().get(expectedKey).iterator();
       assertEquals("valueOne", it.next().getLabel());
       assertEquals("valueTwo", it.next().getLabel());
-    }
-  }
-
-  @Test
-  public void testSaveAndLoadUser() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      User expected = new User().setEmail("test@test.com");
-
-      persistence.save(expected);
-
-      User testObj = persistence.resolveById(expected.getId(), User.class);
-
-      assertNotNull(testObj);
-      assertEquals(expected.getEmail(), testObj.getEmail());
-    }
-  }
-
-  @Test
-  public void testSaveAndLoadSecurityRole() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      SecurityRole expected = new SecurityRole().setDescription("Role Description");
-
-      persistence.save(expected);
-
-      SecurityRole testObj = persistence.resolveById(expected.getId(), SecurityRole.class);
-
-      assertNotNull(testObj);
-      assertEquals(expected.getDescription(), testObj.getDescription());
-    }
-  }
-
-  @Test
-  public void testSaveAndLoadEvent() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      Event expected = new Event();
-
-      persistence.save(expected);
-
-      Event testObj = persistence.resolveById(expected.getId(), Event.class);
-
-      assertNotNull(testObj);
-      assertEquals(expected.getId(), testObj.getId());
-    }
-  }
-
-  @Test
-  public void testSaveAndLoadOu() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      Event event = new Event();
-      event.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(LocalDateTime.now().plusDays(2)));
-      Room room = new Room().addEvent(event).addEvent(new Event());
-      room.getChannel().setLabel("Channel Label");
-      OrganisationUnit expected = new OrganisationUnit().addRoom(room).addRole(new SecurityRole());
-
-      persistence.save(expected);
-
-      OrganisationUnit testObj = persistence.resolveById(expected.getId(), OrganisationUnit.class);
-
-      assertNotNull(testObj);
-      assertEquals(expected.getId(), testObj.getId());
-      assertEquals("Channel Label", testObj.getRooms().first().getChannel().getLabel());
-      assertEquals(expected.getRooms().first().getChannel().getLabel(), testObj.getRooms().first().getChannel().getLabel());
-    }
-  }
-
-  @Test
-  public void testAuthenticationSession() throws Exception {
-    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
-      SecurityRole systemRole = new SecurityRole().setLabel("System Role");
-
-      SecurityRole roleA = new SecurityRole().setLabel("Role A");
-      SecurityRole roleB = new SecurityRole().setLabel("Role B");
-      SecurityRole roleC = new SecurityRole().setLabel("Role C");
-
-      OrganisationUnit ou1 = new OrganisationUnit().setLabel("Organisation 1");
-      ou1.addRole(roleA).addRole(roleC);
-
-      OrganisationUnit ou2 = new OrganisationUnit().setLabel("Organisation 2");
-      ou2.addRole(roleB);
-
-      persistence.save(systemRole);
-      persistence.save(ou1);
-      persistence.save(ou2);
-
-      AuthenticationSession session = new AuthenticationSession().addSystemRole(systemRole).setUser(new User().setEmail("some@somwehere.com"));
-      session.addRolesInOrganisationUnit(ou1, roleA);
-      session.addRolesInOrganisationUnit(ou2, roleB);
-
-      persistence.save(session);
-
-      AuthenticationSession testObj = persistence.resolveById(session.getId(), AuthenticationSession.class);
-
-      assertNotNull(testObj);
-      assertEquals("Role A", testObj.getOrganisationUnitsRoles().get(ou1).get(0).getLabel());
     }
   }
 

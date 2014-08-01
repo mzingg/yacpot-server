@@ -1,4 +1,4 @@
-package com.yacpot.server.model;
+package com.yacpot.core.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;

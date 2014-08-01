@@ -1,4 +1,4 @@
-package com.yacpot.server.model;
+package com.yacpot.core.model;
 
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;

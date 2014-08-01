@@ -1,6 +1,7 @@
 package com.yacpot.server.model;
 
-import com.yacpot.server.model.sort.GenericModelComparator;
+import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.sort.GenericModelComparator;
 
 import java.util.*;
 

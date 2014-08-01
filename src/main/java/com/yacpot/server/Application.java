@@ -1,7 +1,7 @@
 package com.yacpot.server;
 
 import com.mongodb.MongoClient;
-import com.yacpot.server.persistence.Persistence;
+import com.yacpot.core.persistence.Persistence;
 import com.yacpot.server.persistence.UserPersistence;
 
 public class Application {

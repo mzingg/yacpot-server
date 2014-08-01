@@ -1,6 +1,6 @@
-package com.yacpot.server.persistence;
+package com.yacpot.core.persistence;
 
-import com.yacpot.server.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractGenericModel;
 
 public class TestSubModelOne extends AbstractGenericModel<TestSubModelOne> {
 

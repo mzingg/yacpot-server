@@ -4,6 +4,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.yacpot.core.persistence.Persistence;
+import com.yacpot.core.persistence.PersistenceException;
 import com.yacpot.server.model.User;
 
 public class UserPersistence extends Persistence {

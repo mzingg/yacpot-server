@@ -1,13 +1,13 @@
-package com.yacpot.server.model;
+package com.yacpot.core.model;
 
-import com.yacpot.server.model.sort.GenericModelComparator;
+import com.yacpot.core.model.sort.GenericModelComparator;
 import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 import java.util.*;
 
-import static com.yacpot.server.tests.ModelTestUtil.toJoinedString;
+import static com.yacpot.core.tests.ModelTestUtil.toJoinedString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

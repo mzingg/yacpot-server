@@ -1,8 +1,8 @@
-package com.yacpot.server.persistence;
+package com.yacpot.core.persistence;
 
 import com.mongodb.*;
-import com.yacpot.server.model.GenericModel;
-import com.yacpot.server.model.GenericModelIdentifier;
+import com.yacpot.core.model.GenericModel;
+import com.yacpot.core.model.GenericModelIdentifier;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;

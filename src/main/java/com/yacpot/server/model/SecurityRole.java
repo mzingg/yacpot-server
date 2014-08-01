@@ -1,5 +1,6 @@
 package com.yacpot.server.model;
 
+import com.yacpot.core.model.AbstractGenericModel;
 import org.apache.commons.lang3.StringUtils;
 
 public class SecurityRole extends AbstractGenericModel<SecurityRole> {

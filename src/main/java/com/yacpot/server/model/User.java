@@ -1,5 +1,6 @@
 package com.yacpot.server.model;
 
+import com.yacpot.core.model.AbstractGenericModel;
 import com.yacpot.server.auth.AuthenticationException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;

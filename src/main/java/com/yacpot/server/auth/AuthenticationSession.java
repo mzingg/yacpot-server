@@ -1,10 +1,10 @@
 package com.yacpot.server.auth;
 
-import com.yacpot.server.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.persistence.PersistenceException;
 import com.yacpot.server.model.OrganisationUnit;
 import com.yacpot.server.model.SecurityRole;
 import com.yacpot.server.model.User;
-import com.yacpot.server.persistence.PersistenceException;
 import com.yacpot.server.persistence.UserPersistence;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
