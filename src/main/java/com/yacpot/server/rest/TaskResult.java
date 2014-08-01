@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class TaskResult {
 
-  public static TaskResult NotFoundResult = new TaskResult() {
+  public static final TaskResult NotFoundResult = new TaskResult() {
   };
 
   private String json;
 
-  private Map<String, String> userAttributes;
+  private final Map<String, String> userAttributes;
 
   public TaskResult() {
     this.json = StringUtils.EMPTY;

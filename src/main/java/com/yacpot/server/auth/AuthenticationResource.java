@@ -47,7 +47,7 @@ public class AuthenticationResource {
 
         generator.flush();
 
-      } catch (IOException e) {
+      } catch (IOException ignored) {
       }
 
       return new TaskResult().setJson(w.getBuffer().toString());

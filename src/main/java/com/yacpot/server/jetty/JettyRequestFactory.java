@@ -1,6 +1,5 @@
 package com.yacpot.server.jetty;
 
-import com.yacpot.server.auth.AuthenticationException;
 import com.yacpot.server.auth.AuthenticationSession;
 import com.yacpot.server.auth.AuthenticationSessionFactory;
 import com.yacpot.server.rest.Operation;
@@ -51,7 +50,7 @@ public class JettyRequestFactory implements TaskFactory<JettyRequestTask, Reques
   }
 
   @Override
-  public AuthenticationSession getSession(@NotNull Request jettyRequest) throws AuthenticationException {
+  public AuthenticationSession getSession(@NotNull Request jettyRequest) {
     jettyRequest.getRemoteUser();
 
     return new AuthenticationSession();

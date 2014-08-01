@@ -19,14 +19,13 @@ public final class GenericModelIdentifier implements Serializable {
 
     GenericModelIdentifier that = (GenericModelIdentifier) o;
 
-    if (id != null ? !id.equals(that.id) : that.id != null) return false;
+    return id.equals(that.id);
 
-    return true;
   }
 
   @Override
   public int hashCode() {
-    return id != null ? id.hashCode() : 0;
+    return id.hashCode();
   }
 
   @Override

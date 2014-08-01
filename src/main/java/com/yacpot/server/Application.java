@@ -6,7 +6,7 @@ import com.yacpot.server.persistence.UserPersistence;
 
 public class Application {
 
-  private String databaseName;
+  private final String databaseName;
 
   private MongoClient mongoClient;
 

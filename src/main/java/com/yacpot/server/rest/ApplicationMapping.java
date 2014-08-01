@@ -98,8 +98,8 @@ public class ApplicationMapping<T extends Task> {
   }
 
   protected final class MappingSolution {
-    private T task;
-    private MappingEntry mappingEntry;
+    private final T task;
+    private final MappingEntry mappingEntry;
 
     private MappingSolution(T task, MappingEntry mappingEntry) {
       this.task = task;

@@ -36,7 +36,7 @@ public class Persistence implements Closeable {
     boxedTypes.put(short.class, Short.class);
   }
 
-  private DB database;
+  private final DB database;
 
   public Persistence(MongoClient mongo, String databaseName) {
     this.database = mongo.getDB(databaseName);

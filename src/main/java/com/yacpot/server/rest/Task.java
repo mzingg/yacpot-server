@@ -7,13 +7,13 @@ import java.util.*;
 
 public class Task<T extends Task> {
 
-  private String path;
+  private final String path;
 
   private Operation operation;
 
   private Map<String, Object> attributes;
 
-  private List<String> parameters;
+  private final List<String> parameters;
 
   private AuthenticationSession authenticationSession;
 

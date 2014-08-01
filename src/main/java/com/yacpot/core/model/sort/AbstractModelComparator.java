@@ -9,7 +9,7 @@ public abstract class AbstractModelComparator<T extends GenericModel, U extends 
   private OrderStrategy orderStrategy;
   private int sortDirectionMultiplier;
 
-  public AbstractModelComparator() {
+  protected AbstractModelComparator() {
     this.orderStrategy = OrderStrategy.NO_ORDER;
     this.sortDirectionMultiplier = 1;
   }

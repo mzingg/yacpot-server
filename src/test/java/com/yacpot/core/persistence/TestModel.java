@@ -36,7 +36,7 @@ public class TestModel extends AbstractGenericModel<TestModel> {
 
   private TestSubModelOne subModelValue;
 
-  private Collection<TestSubModelOne> subModels;
+  private final Collection<TestSubModelOne> subModels;
 
   private Map<String, TestSubModelOne> stringKeyMap;
 

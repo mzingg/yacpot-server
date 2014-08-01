@@ -7,7 +7,6 @@ import org.joda.time.Seconds;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class EventTimeline extends AbstractGenericModel<EventTimeline> {
@@ -27,12 +26,7 @@ public class EventTimeline extends AbstractGenericModel<EventTimeline> {
     List<EventIncarnation> clonedList = new ArrayList<>(incarnations);
 
     final LocalDateTime anchorDateForAnonClass = anchorDate;
-    Collections.sort(clonedList, new Comparator<EventIncarnation>() {
-      @Override
-      public int compare(EventIncarnation o1, EventIncarnation o2) {
-        return o1.getSortDate(anchorDateForAnonClass).compareTo(o2.getSortDate(anchorDateForAnonClass));
-      }
-    });
+    Collections.sort(clonedList, (o1, o2) -> o1.getSortDate(anchorDateForAnonClass).compareTo(o2.getSortDate(anchorDateForAnonClass)));
 
     return Collections.unmodifiableList(clonedList);
   }

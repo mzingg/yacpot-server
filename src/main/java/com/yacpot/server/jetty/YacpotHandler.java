@@ -16,12 +16,10 @@ import java.util.Map;
 
 public class YacpotHandler extends AbstractHandler {
 
-  private Application application;
-  private JettyRequestFactory requestFactory;
-  private ApplicationMapping<Task> applicationMapping;
+  private final JettyRequestFactory requestFactory;
+  private final ApplicationMapping<Task> applicationMapping;
 
   public YacpotHandler(Application application) {
-    this.application = application;
     this.requestFactory = new JettyRequestFactory();
     this.applicationMapping = new ApplicationMapping<>();
     this.applicationMapping.registerResource(new AuthenticationResource(application));

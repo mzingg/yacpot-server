@@ -2,9 +2,9 @@ package com.yacpot.server.auth;
 
 public class AuthenticationValidation {
 
-  private long timestamp;
+  private final long timestamp;
 
-  private String validationCode;
+  private final String validationCode;
 
   public AuthenticationValidation(long timestamp, String validationCode) {
     this.timestamp = timestamp;

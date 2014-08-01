@@ -5,7 +5,11 @@ import com.yacpot.server.model.sort.EventModelComparator;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class Room extends AbstractGenericModel<Room> {
 
@@ -46,13 +50,7 @@ public class Room extends AbstractGenericModel<Room> {
   }
 
   public Collection<Event> getCalendar(LocalDate fromDate, LocalDate toDate) {
-    Collection<Event> result = new ArrayList<>();
-    for (Event e : getEvents()) {
-      if (e.getTimeline().hasIncarnationsDuring(fromDate, toDate)) {
-        result.add(e);
-      }
-    }
-    return result;
+    return getEvents().stream().filter(e -> e.getTimeline().hasIncarnationsDuring(fromDate, toDate)).collect(Collectors.toList());
   }
 
 }

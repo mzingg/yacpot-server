@@ -37,7 +37,7 @@ public class AuthenticationSession extends AbstractGenericModel<AuthenticationSe
   }
 
   public AuthenticationValidation authenticate(UserPersistence userPersistence, String userId, Long timestamp, String authenticationCode) throws AuthenticationException {
-    if (StringUtils.isBlank(userId) || timestamp == null || timestamp.longValue() < 0 || StringUtils.isBlank(authenticationCode)) {
+    if (StringUtils.isBlank(userId) || timestamp == null || timestamp < 0 || StringUtils.isBlank(authenticationCode)) {
       throw new AuthenticationException("Invalid authentication credentials.");
     }
 
@@ -68,7 +68,7 @@ public class AuthenticationSession extends AbstractGenericModel<AuthenticationSe
     }
   }
 
-  public byte[] createHmac(byte[] key, String hashPayload) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
+  public byte[] createHmac(byte[] key, String hashPayload) throws NoSuchAlgorithmException, InvalidKeyException {
     final Mac shaHmac = Mac.getInstance("HmacSHA256");
     shaHmac.init(new SecretKeySpec(key, "HmacSHA256"));
 
