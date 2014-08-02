@@ -6,9 +6,9 @@ import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
 
-public abstract class AbstractGenericModel<T extends GenericModel> implements Serializable, GenericModel<T> {
+public abstract class AbstractModel<T extends GenericModel> implements Serializable, GenericModel<T> {
 
-  private GenericModelIdentifier id;
+  private ModelIdentifier id;
 
   private LocalDateTime timestamp;
 
@@ -16,21 +16,21 @@ public abstract class AbstractGenericModel<T extends GenericModel> implements Se
 
   private transient int orderWeight;
 
-  public AbstractGenericModel() {
-    this.id = new GenericModelIdentifier(ObjectId.get().toString());
+  public AbstractModel() {
+    this.id = new ModelIdentifier(ObjectId.get().toString());
     this.orderWeight = 0;
     this.label = this.id.toString();
     timestamp = LocalDateTime.now();
   }
 
   @Override
-  public GenericModelIdentifier getId() {
+  public ModelIdentifier getId() {
     return id;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T setId(@NotNull GenericModelIdentifier newId) {
+  public T setId(@NotNull ModelIdentifier newId) {
     this.id = newId;
     return (T) this;
   }

@@ -4,20 +4,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-public final class GenericModelIdentifier implements Serializable {
+public final class ModelIdentifier implements Serializable {
 
   private final String id;
 
-  public GenericModelIdentifier(@NotNull String id) {
+  public ModelIdentifier(@NotNull String id) {
     this.id = id;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof GenericModelIdentifier)) return false;
+    if (!(o instanceof ModelIdentifier)) return false;
 
-    GenericModelIdentifier that = (GenericModelIdentifier) o;
+    ModelIdentifier that = (ModelIdentifier) o;
 
     return id.equals(that.id);
 

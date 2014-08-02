@@ -1,6 +1,6 @@
 package com.yacpot.community.model;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import com.yacpot.community.model.sort.EventModelComparator;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-public class Room extends AbstractGenericModel<Room> {
+public class Room extends AbstractModel<Room> {
 
   private Channel channel;
 

@@ -1,6 +1,6 @@
 package com.yacpot.server.auth;
 
-import com.mongodb.MongoClient;
+import com.yacpot.core.persistence.mongodb.MongoDbApplication;
 import com.yacpot.server.jetty.JettyRequestFactory;
 import com.yacpot.server.model.User;
 import com.yacpot.server.persistence.UserPersistence;
@@ -10,36 +10,34 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
-import static com.yacpot.server.tests.jetty.JettyTestUtils.aRequest;
+import static com.yacpot.server.tests.JettyTestUtils.aRequest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeNotNull;
 
 public class AuthenticationSessionTest {
   private final static String TEST_DATABASE_NAME = "test";
 
-  private static MongoClient client;
+  private static MongoDbApplication application;
 
   @BeforeClass
   public static void initialize() throws Exception {
     try {
-      client = new MongoClient();
-      client.getDB("admin").command("ping").throwOnError();
+      application = new MongoDbApplication(TEST_DATABASE_NAME);
+      application.getMongoClient().dropDatabase(TEST_DATABASE_NAME);
 
-      client.dropDatabase(TEST_DATABASE_NAME);
-
-      try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+      try (UserPersistence persistence = new UserPersistence(application)) {
         User testuser = new User().setEmail("test@test.local").changePassword("aPassword", null).setLabel("Test User");
         persistence.save(testuser);
       }
 
     } catch (Exception ex) {
-      client = null;
+      application = null;
     }
   }
 
   @Before
   public void setUp() throws Exception {
-    assumeNotNull(client);
+    assumeNotNull(application);
   }
 
   @Test(expected = AuthenticationException.class)
@@ -62,7 +60,7 @@ public class AuthenticationSessionTest {
 
   @Test
   public void testAuthentication() throws Exception {
-    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+    try (UserPersistence persistence = new UserPersistence(application)) {
       AuthenticationSession testObj = new AuthenticationSession();
 
       testObj.authenticate(persistence, "test@test.local", 1397653858L, "ff5754533e3914301ba8d1a9c650c762ebb599366540287654763ab2aaa6129d");
@@ -72,7 +70,7 @@ public class AuthenticationSessionTest {
 
   @Test(expected = AuthenticationException.class)
   public void testAuthenticationFailsWithWrongTimestamp() throws Exception {
-    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+    try (UserPersistence persistence = new UserPersistence(application)) {
       AuthenticationSession testObj = new AuthenticationSession();
 
       testObj.authenticate(persistence, "test@test.local", 1397653859L, "ff5754533e3914301ba8d1a9c650c762ebb599366540287654763ab2aaa6129d");
@@ -81,7 +79,7 @@ public class AuthenticationSessionTest {
 
   @Test(expected = AuthenticationException.class)
   public void testAuthenticationFailsWithWrongCode() throws Exception {
-    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+    try (UserPersistence persistence = new UserPersistence(application)) {
       AuthenticationSession testObj = new AuthenticationSession();
 
       testObj.authenticate(persistence, "test@test.local", 1397653858L, "ef5754533e3914301ba8d1a9c650c762ebb599366540287654763ab2aaa6129d");

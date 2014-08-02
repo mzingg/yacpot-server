@@ -3,7 +3,7 @@ package com.yacpot.server.jetty;
 import com.yacpot.server.rest.*;
 import org.junit.Test;
 
-import static com.yacpot.server.tests.jetty.JettyTestUtils.*;
+import static com.yacpot.server.tests.JettyTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 

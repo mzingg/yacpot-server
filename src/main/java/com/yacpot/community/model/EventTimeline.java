@@ -1,6 +1,6 @@
 package com.yacpot.community.model;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Seconds;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EventTimeline extends AbstractGenericModel<EventTimeline> {
+public class EventTimeline extends AbstractModel<EventTimeline> {
 
   private final List<EventIncarnation> incarnations;
 

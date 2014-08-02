@@ -4,8 +4,9 @@ import com.yacpot.community.model.Event;
 import com.yacpot.community.model.OrganisationUnit;
 import com.yacpot.community.model.Room;
 import com.yacpot.community.model.SingleDateIncarnation;
+import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import com.yacpot.core.persistence.Persistence;
-import com.yacpot.core.persistence.PersistenceTest;
+import com.yacpot.core.persistence.mongodb.MongoDbIntegrationTest;
 import com.yacpot.server.auth.AuthenticationSession;
 import com.yacpot.server.model.*;
 import org.joda.time.LocalDateTime;
@@ -14,11 +15,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class TestModelPersistence extends PersistenceTest {
+public class TestModelPersistence extends MongoDbIntegrationTest {
 
   @Test
   public void testSaveAndLoadUser() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       User expected = new User().setEmail("test@test.com");
 
       persistence.save(expected);
@@ -32,7 +33,7 @@ public class TestModelPersistence extends PersistenceTest {
 
   @Test
   public void testSaveAndLoadSecurityRole() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       SecurityRole expected = new SecurityRole().setDescription("Role Description");
 
       persistence.save(expected);
@@ -46,7 +47,7 @@ public class TestModelPersistence extends PersistenceTest {
 
   @Test
   public void testSaveAndLoadEvent() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       Event expected = new Event();
 
       persistence.save(expected);
@@ -60,7 +61,7 @@ public class TestModelPersistence extends PersistenceTest {
 
   @Test
   public void testSaveAndLoadOu() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       Event event = new Event();
       event.getTimeline().addIncarnation(new SingleDateIncarnation().setDate(LocalDateTime.now().plusDays(2)));
       Room room = new Room().addEvent(event).addEvent(new Event());
@@ -80,7 +81,7 @@ public class TestModelPersistence extends PersistenceTest {
 
   @Test
   public void testAuthenticationSession() throws Exception {
-    try (UserPersistence persistence = new UserPersistence(client, TEST_DATABASE_NAME)) {
+    try (UserPersistence persistence = new UserPersistence(application)) {
       SecurityRole systemRole = new SecurityRole().setLabel("System Role");
 
       SecurityRole roleA = new SecurityRole().setLabel("Role A");

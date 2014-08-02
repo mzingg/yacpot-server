@@ -1,8 +1,13 @@
-package com.yacpot.core.persistence;
+package com.yacpot.core.persistence.mongodb;
 
-import com.mongodb.MongoClient;
 import com.yacpot.core.model.GenericModel;
-import com.yacpot.core.model.GenericModelIdentifier;
+import com.yacpot.core.model.ModelIdentifier;
+import com.yacpot.core.persistence.Persistence;
+import com.yacpot.core.persistence.TestModel;
+import com.yacpot.core.persistence.TestSubModelOne;
+import com.yacpot.core.persistence.TestSubModelTwo;
+import com.yacpot.core.persistence.mongodb.MongoDbApplication;
+import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;
@@ -15,33 +20,31 @@ import java.util.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNotNull;
 
-public class PersistenceTest {
+public class MongoDbIntegrationTest {
 
-  protected final static String TEST_DATABASE_NAME = "test";
+  private final static String TEST_DATABASE_NAME = "test";
 
-  protected static MongoClient client;
+  protected static MongoDbApplication application;
 
   @BeforeClass
   public static void initialize() throws Exception {
     try {
-      client = new MongoClient();
-      client.getDB("admin").command("ping").throwOnError();
-
-      client.dropDatabase(TEST_DATABASE_NAME);
+      application = new MongoDbApplication(TEST_DATABASE_NAME);
+      application.getMongoClient().dropDatabase(TEST_DATABASE_NAME);
     } catch (Exception ex) {
-      client = null;
+      application = null;
     }
   }
 
   @Before
   public void setUp() throws Exception {
-    assumeNotNull(client);
+    assumeNotNull(application);
   }
 
   @Test
   public void testNotFoundReturnNull() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      TestModel testObj = persistence.resolveById(new GenericModelIdentifier(ObjectId.get().toString()), TestModel.class);
+    try (Persistence persistence = new MongoDbPersistence(application)) {
+      TestModel testObj = persistence.resolveById(new ModelIdentifier(ObjectId.get().toString()), TestModel.class);
 
       assertNull(testObj);
     }
@@ -49,8 +52,8 @@ public class PersistenceTest {
 
   @Test
   public void testResolveNotFoundReturnNull() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
-      GenericModel<?> testObj = persistence.resolveById(new GenericModelIdentifier(ObjectId.get().toString()));
+    try (Persistence persistence = new MongoDbPersistence(application)) {
+      GenericModel<?> testObj = persistence.resolveById(new ModelIdentifier(ObjectId.get().toString()));
 
       assertNull(testObj);
     }
@@ -58,7 +61,7 @@ public class PersistenceTest {
 
   @Test
   public void testResolvingById() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       TestModel expected1 = new TestModel().setLabel("Expected 1");
       persistence.save(expected1);
 
@@ -77,7 +80,7 @@ public class PersistenceTest {
 
   @Test
   public void testSaveAndLoadgenericModel() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       LocalDateTime timestamp = LocalDateTime.now();
       TestModel expected = new TestModel().setLabel("Label").setOrderWeight(20).setTimestamp(timestamp);
 
@@ -95,7 +98,7 @@ public class PersistenceTest {
 
   @Test
   public void testSaveAndLoadPrimitiveDataTypes() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       TestModel expected = new TestModel();
       expected.setByteValue(Byte.MAX_VALUE).setShortValue(Short.MAX_VALUE).setIntValue(Integer.MAX_VALUE).setLongValue(Long.MAX_VALUE);
       expected.setFloatValue(Float.MAX_VALUE).setDoubleValue(Double.MAX_VALUE);
@@ -127,7 +130,7 @@ public class PersistenceTest {
 
   @Test
   public void testSaveAndLoadSimpleCollectionsAndMaps() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       TestModel expected = new TestModel();
 
       List<String> expectedList = new ArrayList<>();
@@ -155,7 +158,7 @@ public class PersistenceTest {
 
   @Test
   public void testSubmodelCollection() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       TestModel expected = new TestModel();
 
       TestSubModelOne one = new TestSubModelOne().setLabel("Sub One");
@@ -181,7 +184,7 @@ public class PersistenceTest {
 
   @Test
   public void testSaveAndLoadSubModel() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
       TestModel expected = new TestModel().setSubModelValue(new TestSubModelOne().setLabel("Submodel Label"));
 
       persistence.save(expected);
@@ -196,7 +199,7 @@ public class PersistenceTest {
 
   @Test
   public void testStringToOneMap() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
 
       Map<String, TestSubModelOne> stringKeyMap = new HashMap<>();
       stringKeyMap.put("one", new TestSubModelOne().setLabel("one"));
@@ -216,7 +219,7 @@ public class PersistenceTest {
 
   @Test
   public void testOneToOneMap() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
 
       TestSubModelOne expectedKey = new TestSubModelOne().setLabel("two");
 
@@ -239,7 +242,7 @@ public class PersistenceTest {
 
   @Test
   public void testOneToManyMap() throws Exception {
-    try (Persistence persistence = new Persistence(client, TEST_DATABASE_NAME)) {
+    try (Persistence persistence = new MongoDbPersistence(application)) {
 
       TestSubModelOne expectedKey = new TestSubModelOne().setLabel("two");
 

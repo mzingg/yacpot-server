@@ -2,7 +2,8 @@ package com.yacpot.server.auth;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.yacpot.server.Application;
+import com.yacpot.core.persistence.mongodb.MongoDbApplication;
+import com.yacpot.server.persistence.UserPersistence;
 import com.yacpot.server.rest.*;
 
 import java.io.IOException;
@@ -11,9 +12,9 @@ import java.io.StringWriter;
 @Resource
 public class AuthenticationResource {
 
-  private final Application application;
+  private final MongoDbApplication application;
 
-  public AuthenticationResource(Application application) {
+  public AuthenticationResource(MongoDbApplication application) {
     this.application = application;
   }
 
@@ -30,7 +31,7 @@ public class AuthenticationResource {
       String authCode = task.getAttribute("authCode", String.class);
 
       AuthenticationSession session = new AuthenticationSession();
-      AuthenticationValidation validation = session.authenticate(application.getUserPersistence(), userId, timestamp, authCode);
+      AuthenticationValidation validation = session.authenticate(new UserPersistence(application), userId, timestamp, authCode);
 
       task.setAuthenticationSession(session);
 

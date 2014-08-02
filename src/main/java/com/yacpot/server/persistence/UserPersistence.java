@@ -3,17 +3,17 @@ package com.yacpot.server.persistence;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.yacpot.core.persistence.Persistence;
+import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import com.yacpot.core.persistence.PersistenceException;
+import com.yacpot.core.persistence.mongodb.MongoDbApplication;
 import com.yacpot.server.model.User;
 
-public class UserPersistence extends Persistence {
+public class UserPersistence extends MongoDbPersistence {
 
   private static final String EMAIL_PROPERTY_NAME = "email";
 
-  public UserPersistence(MongoClient mongo, String databaseName) {
-    super(mongo, databaseName);
+  public UserPersistence(MongoDbApplication application) {
+    super(application);
   }
 
   public User findByEmail(String email) throws PersistenceException {
@@ -24,7 +24,7 @@ public class UserPersistence extends Persistence {
     }
 
     User result = new User();
-    fillModelWith(result, mongoObj);
+    fillModel(result, mongoObj);
 
     return result;
   }

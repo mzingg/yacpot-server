@@ -1,12 +1,12 @@
 package com.yacpot.community.model;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-public class DateIntervalIncarnation extends AbstractGenericModel<DateIntervalIncarnation> implements EventIncarnation {
+public class DateIntervalIncarnation extends AbstractModel<DateIntervalIncarnation> implements EventIncarnation {
 
   private LocalDateTime startDate;
   private LocalDateTime endDate;

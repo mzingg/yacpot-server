@@ -1,4 +1,4 @@
-package com.yacpot.server.tests.jetty;
+package com.yacpot.server.tests;
 
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;

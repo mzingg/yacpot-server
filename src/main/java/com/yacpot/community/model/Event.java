@@ -1,10 +1,10 @@
 package com.yacpot.community.model;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
-public class Event extends AbstractGenericModel<Event> {
+public class Event extends AbstractModel<Event> {
 
   private EventTimeline timeline;
 

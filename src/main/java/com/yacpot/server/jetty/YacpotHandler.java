@@ -1,6 +1,6 @@
 package com.yacpot.server.jetty;
 
-import com.yacpot.server.Application;
+import com.yacpot.core.persistence.mongodb.MongoDbApplication;
 import com.yacpot.server.auth.AuthenticationResource;
 import com.yacpot.server.rest.*;
 import org.eclipse.jetty.http.HttpMethod;
@@ -19,7 +19,7 @@ public class YacpotHandler extends AbstractHandler {
   private final JettyRequestFactory requestFactory;
   private final ApplicationMapping<Task> applicationMapping;
 
-  public YacpotHandler(Application application) {
+  public YacpotHandler(MongoDbApplication application) {
     this.requestFactory = new JettyRequestFactory();
     this.applicationMapping = new ApplicationMapping<>();
     this.applicationMapping.registerResource(new AuthenticationResource(application));

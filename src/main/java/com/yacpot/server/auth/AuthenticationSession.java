@@ -1,6 +1,6 @@
 package com.yacpot.server.auth;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import com.yacpot.core.persistence.PersistenceException;
 import com.yacpot.community.model.OrganisationUnit;
 import com.yacpot.server.model.SecurityRole;
@@ -17,7 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class AuthenticationSession extends AbstractGenericModel<AuthenticationSession> {
+public class AuthenticationSession extends AbstractModel<AuthenticationSession> {
 
   private LocalDateTime expiration;
 

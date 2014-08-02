@@ -1,12 +1,12 @@
 package com.yacpot.community.model;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import com.yacpot.core.model.sort.GenericModelComparator;
 import com.yacpot.server.model.SecurityRole;
 
 import java.util.*;
 
-public class OrganisationUnit extends AbstractGenericModel<OrganisationUnit> {
+public class OrganisationUnit extends AbstractModel<OrganisationUnit> {
 
   private final SortedSet<Room> roomList;
   private final List<SecurityRole> roleList;

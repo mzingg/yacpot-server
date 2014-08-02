@@ -1,8 +1,8 @@
 package com.yacpot.core.persistence;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 
-public class TestSubModelOne extends AbstractGenericModel<TestSubModelOne> {
+public class TestSubModelOne extends AbstractModel<TestSubModelOne> {
 
   private String value;
 

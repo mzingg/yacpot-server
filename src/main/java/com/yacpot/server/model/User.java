@@ -1,6 +1,6 @@
 package com.yacpot.server.model;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import com.yacpot.server.auth.AuthenticationException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -13,7 +13,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
-public class User extends AbstractGenericModel<User> {
+public class User extends AbstractModel<User> {
 
   private final static char KEY_INPUT_CONCAT_CHAR = ':';
 

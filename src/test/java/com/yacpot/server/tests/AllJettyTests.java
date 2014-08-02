@@ -1,4 +1,4 @@
-package com.yacpot.server.tests.jetty;
+package com.yacpot.server.tests;
 
 import com.yacpot.server.jetty.JettyAuthenticationTest;
 import com.yacpot.server.jetty.JettyRequestResolvingTest;
@@ -7,5 +7,5 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({JettyAuthenticationTest.class, JettyRequestResolvingTest.class})
-public class AllTests {
+public class AllJettyTests {
 }

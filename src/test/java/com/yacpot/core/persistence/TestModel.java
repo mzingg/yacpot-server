@@ -1,12 +1,12 @@
 package com.yacpot.core.persistence;
 
-import com.yacpot.core.model.AbstractGenericModel;
+import com.yacpot.core.model.AbstractModel;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 
 import java.util.*;
 
-public class TestModel extends AbstractGenericModel<TestModel> {
+public class TestModel extends AbstractModel<TestModel> {
 
   private byte byteValue;
 
