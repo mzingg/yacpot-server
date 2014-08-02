@@ -3,9 +3,9 @@ package com.yacpot.server.persistence;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import com.yacpot.core.persistence.PersistenceException;
 import com.yacpot.core.persistence.mongodb.MongoDbApplication;
+import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import com.yacpot.server.model.User;
 
 public class UserPersistence extends MongoDbPersistence {

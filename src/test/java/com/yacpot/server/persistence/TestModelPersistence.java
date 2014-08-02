@@ -4,11 +4,12 @@ import com.yacpot.community.model.Event;
 import com.yacpot.community.model.OrganisationUnit;
 import com.yacpot.community.model.Room;
 import com.yacpot.community.model.SingleDateIncarnation;
-import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import com.yacpot.core.persistence.Persistence;
 import com.yacpot.core.persistence.mongodb.MongoDbIntegrationTest;
+import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import com.yacpot.server.auth.AuthenticationSession;
-import com.yacpot.server.model.*;
+import com.yacpot.server.model.SecurityRole;
+import com.yacpot.server.model.User;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 

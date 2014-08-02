@@ -1,7 +1,7 @@
 package com.yacpot.community.model;
 
-import com.yacpot.core.model.AbstractModel;
 import com.yacpot.community.model.sort.EventModelComparator;
+import com.yacpot.core.model.AbstractModel;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 

@@ -6,8 +6,6 @@ import com.yacpot.core.persistence.Persistence;
 import com.yacpot.core.persistence.TestModel;
 import com.yacpot.core.persistence.TestSubModelOne;
 import com.yacpot.core.persistence.TestSubModelTwo;
-import com.yacpot.core.persistence.mongodb.MongoDbApplication;
-import com.yacpot.core.persistence.mongodb.MongoDbPersistence;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.LocalDateTime;

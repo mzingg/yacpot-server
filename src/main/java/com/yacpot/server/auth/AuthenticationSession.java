@@ -1,8 +1,8 @@
 package com.yacpot.server.auth;
 
+import com.yacpot.community.model.OrganisationUnit;
 import com.yacpot.core.model.AbstractModel;
 import com.yacpot.core.persistence.PersistenceException;
-import com.yacpot.community.model.OrganisationUnit;
 import com.yacpot.server.model.SecurityRole;
 import com.yacpot.server.model.User;
 import com.yacpot.server.persistence.UserPersistence;
