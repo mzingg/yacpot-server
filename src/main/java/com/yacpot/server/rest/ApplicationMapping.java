@@ -11,6 +11,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.yacpot.server.rest.TaskResult.NotFoundResult;
+
 public class ApplicationMapping<T extends Task> {
 
   private final List<MappingEntry> resourceMappings;
@@ -36,7 +38,7 @@ public class ApplicationMapping<T extends Task> {
       return solutions.get(0).execute();
     }
 
-    return TaskResult.NotFoundResult;
+    return NotFoundResult;
   }
 
   protected List<MappingSolution> findSolutionsFor(T task) {

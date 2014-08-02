@@ -1,7 +1,8 @@
-package com.yacpot.server.model;
+package com.yacpot.community.model;
 
 import com.yacpot.core.model.AbstractGenericModel;
 import com.yacpot.core.model.sort.GenericModelComparator;
+import com.yacpot.server.model.SecurityRole;
 
 import java.util.*;
 

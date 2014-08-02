@@ -1,4 +1,4 @@
-package com.yacpot.server.model;
+package com.yacpot.community.model;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;

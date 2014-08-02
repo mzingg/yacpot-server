@@ -1,5 +1,9 @@
 package com.yacpot.server.persistence;
 
+import com.yacpot.community.model.Event;
+import com.yacpot.community.model.OrganisationUnit;
+import com.yacpot.community.model.Room;
+import com.yacpot.community.model.SingleDateIncarnation;
 import com.yacpot.core.persistence.Persistence;
 import com.yacpot.core.persistence.PersistenceTest;
 import com.yacpot.server.auth.AuthenticationSession;

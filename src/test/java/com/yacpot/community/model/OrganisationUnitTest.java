@@ -1,5 +1,6 @@
-package com.yacpot.server.model;
+package com.yacpot.community.model;
 
+import com.yacpot.server.model.SecurityRole;
 import org.junit.Test;
 
 import static com.yacpot.core.tests.ModelTestUtil.toJoinedString;
